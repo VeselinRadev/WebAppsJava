@@ -1,6 +1,6 @@
 # WebAppsJava
 
-##DB structure
+## DB structure
 
 ### Clients
 - client_id - string uuid - pk
@@ -44,7 +44,7 @@
 - payment-method - enum { credit, debit, transfer }
 
 
-Table Relationships
+## Table Relationships
 -	Client → Cars (One-to-Many)
 -	Client → Insurances (One-to-Many)
 -	Cars → Insurances (One-to-Many)
