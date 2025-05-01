@@ -1,0 +1,780 @@
+{
+	"info": {
+		"_postman_id": "6b009cfa-b1e2-49e8-b72a-e0c93594a61c",
+		"name": "Insurance CRUD API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17214294"
+	},
+	"item": [
+		{
+			"name": "Clients",
+			"item": [
+				{
+					"name": "Create Client",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"client_id\": \"0001\",\n  \"first_name\": \"Veselin\",\n  \"last_name\": \"Radev\",\n  \"email\": \"veselin.radev@example.com\",\n  \"phonenumber\": \"1000000000\",\n  \"address\": \"Varna\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/clients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read All Client",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/clients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read One Client",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/clients/:client_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"clients",
+								":client_id"
+							],
+							"variable": [
+								{
+									"key": "client_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Client",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"client_id\": \"0001\",\n  \"first_name\": \"Veselin\",\n  \"last_name\": \"Radev\",\n  \"email\": \"veselin.radev@example.com\",\n  \"phonenumber\": \"1000000000\",\n  \"address\": \"Varna\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/clients/:client_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"clients",
+								":client_id"
+							],
+							"variable": [
+								{
+									"key": "client_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Client",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/clients/:client_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"clients",
+								":client_id"
+							],
+							"variable": [
+								{
+									"key": "client_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cars",
+			"item": [
+				{
+					"name": "Create Cars",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"car_plate\": \"RR 1234 RR\",\n  \"client_id\": \"0001\",\n  \"make\": \"Audi\",\n  \"model\": \"A4\",\n  \"year\": 2020,\n  \"vin\": \"1HGCM82633A004352\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read All Cars",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read One Cars",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/cars/:car_plate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cars",
+								":car_plate"
+							],
+							"variable": [
+								{
+									"key": "car_plate",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cars",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"car_plate\": \"RR 1234 RR\",\n  \"client_id\": \"0001\",\n  \"make\": \"Audi\",\n  \"model\": \"A4\",\n  \"year\": 2020,\n  \"vin\": \"1HGCM82633A004352\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/cars/:car_plate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cars",
+								":car_plate"
+							],
+							"variable": [
+								{
+									"key": "car_plate",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cars",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/cars/:car_plate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cars",
+								":car_plate"
+							],
+							"variable": [
+								{
+									"key": "car_plate",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Insurers",
+			"item": [
+				{
+					"name": "Create Insurer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"insurer_id\": \"0002\",\n  \"name\": \"Denis Bilql\",\n  \"email\": \"denis.bilql@example.com\",\n  \"phone_number\": \"1000000001\",\n  \"address\": \"Razgrad\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/insurers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read All Insurer",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/insurers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read One Insurer",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/insurers/:insurer_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurers",
+								":insurer_id"
+							],
+							"variable": [
+								{
+									"key": "insurer_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Insurer",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"insurer_id\": \"0002\",\n  \"name\": \"Denis Bilql\",\n  \"email\": \"denis.bilql@example.com\",\n  \"phone_number\": \"1000000001\",\n  \"address\": \"Razgrad\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/insurers/:insurer_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurers",
+								":insurer_id"
+							],
+							"variable": [
+								{
+									"key": "insurer_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Insurer",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/insurers/:insurer_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurers",
+								":insurer_id"
+							],
+							"variable": [
+								{
+									"key": "insurer_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Insurances",
+			"item": [
+				{
+					"name": "Create Insurance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"insurance_id\": \"0003\",\n  \"client_id\": \"0001\",\n  \"car_plate\": \"RR 1234 RR\",\n  \"insurer_id\": \"0002\",\n  \"policy_number\": 9876543210,\n  \"start_date\": \"2025-01-01\",\n  \"end_date\": \"2026-01-01\",\n  \"amount\": 1200,\n  \"details\": \"Elis Ramadanova Co - Full Coverage\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/insurances",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read All Insurance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/insurances",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read One Insurance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/insurances/:insurance_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurances",
+								":insurance_id"
+							],
+							"variable": [
+								{
+									"key": "insurance_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Insurance",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"insurance_id\": \"0003\",\n  \"client_id\": \"0001\",\n  \"car_plate\": \"ABC123\",\n  \"insurer_id\": \"0002\",\n  \"policy_number\": 9876543210,\n  \"start_date\": \"2025-01-01\",\n  \"end_date\": \"2026-01-01\",\n  \"amount\": 1200,\n  \"details\": \"Elis Ramadanova Co - Full Coverage\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/insurances/:insurance_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurances",
+								":insurance_id"
+							],
+							"variable": [
+								{
+									"key": "insurance_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Insurance",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/insurances/:insurance_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"insurances",
+								":insurance_id"
+							],
+							"variable": [
+								{
+									"key": "insurance_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "Create Payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payment_id\": \"0004\",\n  \"insurance_id\": \"0003\",\n  \"payment_date\": \"2025-02-01\",\n  \"amount\": 600,\n  \"payment_method\": \"credit\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read All Payment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read One Payment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/payments/:payment_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payments",
+								":payment_id"
+							],
+							"variable": [
+								{
+									"key": "payment_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Payment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payment_id\": \"0004\",\n  \"insurance_id\": \"0003\",\n  \"payment_date\": \"2025-02-01\",\n  \"amount\": 600,\n  \"payment_method\": \"credit\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/payments/:payment_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payments",
+								":payment_id"
+							],
+							"variable": [
+								{
+									"key": "payment_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Payment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/payments/:payment_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payments",
+								":payment_id"
+							],
+							"variable": [
+								{
+									"key": "payment_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
