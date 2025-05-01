@@ -637,7 +637,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"payment_id\": \"0004\",\n  \"insurance_id\": \"0003\",\n  \"payment_date\": \"2025-02-01\",\n  \"amount\": 600,\n  \"payment_method\": \"credit\"\n}"
+							"raw": "{\n  \"payment_id\": \"0004\",\n  \"insurance_id\": \"0003\",\n  \"payment_date\": \"2025-02-01\",\n  \"payment_end_date\": \"2025-03-01\",\n  \"amount\": 600,\n  \"payment_method\": \"credit\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:3000/payments",
@@ -720,7 +720,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"payment_id\": \"0004\",\n  \"insurance_id\": \"0003\",\n  \"payment_date\": \"2025-02-01\",\n  \"amount\": 600,\n  \"payment_method\": \"credit\"\n}"
+							"raw": "{\n  \"payment_id\": \"0004\",\n  \"insurance_id\": \"0003\",\n  \"payment_date\": \"2025-02-01\",\n  \"payment_end_date\": \"2025-03-01\",\n  \"amount\": 600,\n  \"payment_method\": \"credit\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:3000/payments/:payment_id",
