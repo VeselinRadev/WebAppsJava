@@ -4,6 +4,8 @@ import java.sql.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -15,6 +17,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import com.fmi.insurance.vo.PaymentMethod;
 
 @Entity
 @Getter
@@ -44,6 +48,7 @@ public class Payment {
 
     @Column(nullable = false)
     @NotNull
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     @Column(nullable = false)
@@ -61,9 +66,3 @@ public class Payment {
 
 }
 
-enum PaymentMethod {
-    CREDIT_CARD,
-    BANK_TRANSFER,
-    CASH,
-    OTHER
-}

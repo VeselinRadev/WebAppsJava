@@ -1,6 +1,5 @@
 package com.fmi.insurance.model;
 
-import java.lang.annotation.Inherited;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -51,8 +50,8 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private Set<Car> cars;
-    
+
     @OneToMany(mappedBy = "client")
     private Set<Insurance> insurances;
-    
+
 }
