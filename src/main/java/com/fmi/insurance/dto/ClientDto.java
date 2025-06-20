@@ -3,7 +3,6 @@ package com.fmi.insurance.dto;
 import com.fmi.insurance.model.Client;
 
 public record ClientDto(
-    Long id,
     String ucn,
     String firstName,
     String lastName,
@@ -13,7 +12,6 @@ public record ClientDto(
 ) {
     public static ClientDto fromEntity(Client client) {
         return new ClientDto(
-                client.getId(),
                 client.getUcn(),
                 client.getFirstName(),
                 client.getLastName(),

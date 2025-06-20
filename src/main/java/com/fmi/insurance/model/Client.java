@@ -27,11 +27,6 @@ import lombok.Setter;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    @NotNull
     private String ucn;
 
     @Column(nullable = false)
@@ -53,7 +48,7 @@ public class Client {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(orphanRemoval = true, mappedBy = "client")
     private Set<Car> cars;
 
     @OneToMany(mappedBy = "client")
