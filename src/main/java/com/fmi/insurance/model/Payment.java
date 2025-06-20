@@ -61,7 +61,7 @@ public class Payment {
     private Insurance insurance;
 
     @EqualsAndHashCode.Include
-    public Long getPolicyNumber() {
+    public String getPolicyNumber() {
         return insurance != null ? insurance.getPolicyNumber() : null;
     }
 

@@ -4,7 +4,7 @@ import com.fmi.insurance.model.Insurance;
 
 public record InsuranceDto (
     Long id,
-    Long policyNumber,
+    String policyNumber,
     String startDate,
     String endDate,
     String details

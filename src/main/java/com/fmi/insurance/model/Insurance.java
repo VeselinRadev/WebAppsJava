@@ -34,7 +34,7 @@ public class Insurance {
 
     @Column(nullable = false, unique = true)
     @NotNull
-    private Long policyNumber;
+    private String policyNumber;
 
     @Column(nullable = false)
     @NotNull

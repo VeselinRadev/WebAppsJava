@@ -32,7 +32,7 @@ public class Client {
 
     @Column(nullable = false, unique = true)
     @NotNull
-    private String UCN;
+    private String ucn;
 
     @Column(nullable = false)
     @NotNull
