@@ -47,7 +47,6 @@ public class Insurance {
     @Column
     private String details;
 
-
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
