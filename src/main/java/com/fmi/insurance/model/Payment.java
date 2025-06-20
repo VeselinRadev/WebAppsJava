@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ import com.fmi.insurance.vo.PaymentMethod;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "payment")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
 public class Payment {
 
     @Id
