@@ -61,10 +61,5 @@ public class Payment {
     @JoinColumn(name = "insurance_id", nullable = false)
     private Insurance insurance;
 
-    @EqualsAndHashCode.Include
-    public String getPolicyNumber() {
-        return insurance != null ? insurance.getPolicyNumber() : null;
-    }
-
 }
 

@@ -62,4 +62,14 @@ public class Insurance {
 
     @OneToMany(orphanRemoval = true, mappedBy = "insurance")
     private Set<Payment> payments;
+
+    public void addPayment(Payment payment) {
+        payments.add(payment);
+        payment.setInsurance(this);
+    }
+    
+    public void removePayment(Payment payment) {
+        payments.remove(payment);
+        payment.setInsurance(null);
+    }
 }

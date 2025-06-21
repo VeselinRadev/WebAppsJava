@@ -47,4 +47,14 @@ public class Insurer {
 
     @OneToMany(mappedBy = "insurer")
     private Set<Insurance> insurances;
+
+    void addInsurance(Insurance insurance) {
+        insurances.add(insurance);
+        insurance.setInsurer(this);
+    }
+
+    void removeInsurance(Insurance insurance) {
+        insurances.remove(insurance);
+        insurance.setInsurer(null);
+    }
 }

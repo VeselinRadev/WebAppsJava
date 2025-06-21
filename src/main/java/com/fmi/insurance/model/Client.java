@@ -53,5 +53,25 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private Set<Insurance> insurances;
+    
+    void addCar(Car car) {
+        cars.add(car);
+        car.setClient(this);
+    }
+
+    void removeCar(Car car) {
+        cars.remove(car);
+        car.setClient(null);
+    }
+
+    void addInsurance(Insurance insurance) {
+        insurances.add(insurance);
+        insurance.setClient(this);
+    }
+
+    void removeInsurance(Insurance insurance) {
+        insurances.remove(insurance);
+        insurance.setClient(null);
+    }
 
 }
