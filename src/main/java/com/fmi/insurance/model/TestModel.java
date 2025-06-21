@@ -22,4 +22,5 @@ public class TestModel {
     private Long id;
 
     private String value;
+    
 }
