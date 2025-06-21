@@ -7,7 +7,11 @@ public record CarDto(
     String vin,
     String make,
     String model,
-    Integer year
+    Integer year,
+    Integer volume,
+    Integer power,
+    Integer seats,
+    String fuelType
 ){
     public static CarDto fromEntity(Car car) {
         return new CarDto(
@@ -15,7 +19,11 @@ public record CarDto(
             car.getVin(),
             car.getMake(),
             car.getModel(),
-            car.getYear()
+            car.getYear(),
+            car.getVolume(),
+            car.getPower(),
+            car.getSeats(),
+            car.getFuelType() != null ? car.getFuelType().name() : null
         );
-    }
+    }   
 }

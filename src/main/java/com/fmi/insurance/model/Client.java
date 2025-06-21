@@ -46,6 +46,10 @@ public class Client {
     @Embedded
     private Address address;
 
+    @Column(nullable = false)
+    @NotNull
+    private Integer experienceYears;
+
     @OneToMany(orphanRemoval = true, mappedBy = "client")
     private Set<Car> cars;
 

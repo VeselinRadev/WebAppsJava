@@ -8,7 +8,8 @@ public record ClientDto(
     String lastName,
     String email,
     String phoneNumber,
-    AddressDto address
+    AddressDto address,
+    Integer experienceYears
 ) {
     public static ClientDto fromEntity(Client client) {
         return new ClientDto(
@@ -17,7 +18,8 @@ public record ClientDto(
                 client.getLastName(),
                 client.getEmail(),
                 client.getPhoneNumber(),
-                client.getAddress() != null ? AddressDto.fromEntity(client.getAddress()) : null
+                client.getAddress() != null ? AddressDto.fromEntity(client.getAddress()) : null,
+                client.getExperienceYears()
         );
     }
 }

@@ -2,8 +2,12 @@ package com.fmi.insurance.model;
 
 import java.util.Set;
 
+import com.fmi.insurance.vo.FuelType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -44,6 +48,27 @@ public class Car {
     @Column(nullable = false)
     @NotNull
     private Integer year;
+
+    @Column(nullable = false)
+    @NotNull
+    private Integer volume;
+
+    @Column(nullable = false)
+    @NotNull
+    private Integer power;
+
+    @Column(nullable = false)
+    @NotNull
+    Integer seats;
+
+    @Column(nullable = false)
+    @NotNull
+    private Integer registrationYear;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull
+    private FuelType fuelType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
