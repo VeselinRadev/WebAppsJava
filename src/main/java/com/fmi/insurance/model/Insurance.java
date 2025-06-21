@@ -30,11 +30,6 @@ import lombok.Setter;
 public class Insurance {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    @NotNull
     private String policyNumber;
 
     @Column(nullable = false)
@@ -67,7 +62,7 @@ public class Insurance {
         payments.add(payment);
         payment.setInsurance(this);
     }
-    
+
     public void removePayment(Payment payment) {
         payments.remove(payment);
         payment.setInsurance(null);
