@@ -1,25 +1,43 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Cookies from 'js-cookie';
+import { useAuth } from "../../../contexts/AuthContext.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { API_BASE_URL } from "../../../utils/constants";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setAccessToken } = useAuth();
 
   const handleLogin = async () => {
+    if (!username || username.length < 3 || username.length > 30) {
+      setError('Username must be between 3 and 30 characters');
+      return;
+    }
+
+    if (!password || password.length < 8 || password.length > 100) {
+      setError('Password must be between 8 and 100 characters');
+      return;
+    }
     try {
       const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-        email,
+        username,
         password,
       });
-      localStorage.setItem("token", response.data.token);
+      setAccessToken(response.data.accessToken);
+      Cookies.set('refreshToken', response.data.refreshToken, {
+        expires: 7,
+        secure: true,
+        sameSite: 'Strict',
+      });
+      console.log(useAuth().accessToken); //TODO console log is not shown
       navigate("/");
-    } catch (error) {
-      setError("Invalid credentials");
+    } catch (error: any) {
+      setError(error.response.data.message); //TODO npe
       console.error("Login failed:", error);
     }
   };
@@ -50,8 +68,8 @@ const Login: React.FC = () => {
             <input
               type="email"
               placeholder="Username or Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="input-field"
             />
           </div>
