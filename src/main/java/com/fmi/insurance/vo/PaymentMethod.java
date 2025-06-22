@@ -7,13 +7,6 @@ public enum PaymentMethod {
     OTHER;
 
     public static PaymentMethod fromString(String method) {
-        if (method == null || method.isEmpty()) {
-            return null;
-        }
-        try {
-            return PaymentMethod.valueOf(method.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid payment method: " + method);
-        }
+        return EnumUtils.fromString(PaymentMethod.class, method);
     }
 }

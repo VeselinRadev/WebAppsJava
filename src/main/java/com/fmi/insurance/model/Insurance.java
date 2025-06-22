@@ -3,6 +3,7 @@ package com.fmi.insurance.model;
 import java.sql.Date;
 import java.util.Set;
 
+import com.fmi.insurance.vo.InsuranceStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -48,6 +49,9 @@ public class Insurance {
 
     @Column
     private String details;
+
+    @Column(nullable = false)
+    private InsuranceStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)

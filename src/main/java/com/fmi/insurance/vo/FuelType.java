@@ -9,13 +9,6 @@ public enum FuelType {
     LPG;
 
     public static FuelType fromString(String type) {
-        if (type == null || type.isEmpty()) {
-            return null;
-        }
-        try {
-            return FuelType.valueOf(type.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid fuel type: " + type);
-        }
+        return EnumUtils.fromString(FuelType.class, type);
     }
 }
