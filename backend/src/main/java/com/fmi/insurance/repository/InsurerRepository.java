@@ -11,5 +11,5 @@ import com.fmi.insurance.model.Insurer;
 public interface InsurerRepository extends JpaRepository<Insurer, Long> {
     Optional<Insurer> findByUsername(String username);
 
-    Optional<Insurer> findByInsurance_PolicyNumber(String policyNumber);
+    //Optional<Insurer> findByInsurance_PolicyNumber(String policyNumber);
 }
