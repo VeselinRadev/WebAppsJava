@@ -1,5 +1,8 @@
 package com.fmi.insurance.model;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -10,11 +13,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter
@@ -23,7 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "insurer")
 @Builder
-public class Insurer {
+public class Insurer implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -37,7 +39,7 @@ public class Insurer {
     @NotNull
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @NotNull
     private String phoneNumber;
 
@@ -56,5 +58,32 @@ public class Insurer {
     void removeInsurance(Insurance insurance) {
         insurances.remove(insurance);
         insurance.setInsurer(null);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority =
+                new SimpleGrantedAuthority("ADMIN");
+        return Collections.singletonList(authority);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

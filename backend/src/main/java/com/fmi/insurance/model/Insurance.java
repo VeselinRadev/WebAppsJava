@@ -6,6 +6,8 @@ import java.util.Set;
 import com.fmi.insurance.vo.InsuranceStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -27,7 +29,6 @@ import lombok.Setter;
 @Table(name = "insurance")
 @Builder
 public class Insurance {
-
     @Id
     private String policyNumber;
 
@@ -51,6 +52,7 @@ public class Insurance {
     private String details;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private InsuranceStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
