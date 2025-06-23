@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.fmi.insurance.model.Client;
 
 @Repository
-public interface ClientRepository extends JpaRepository<Client, Long> {
-    Optional<Client> findByUcn(String ucn);
+public interface ClientRepository extends JpaRepository<Client, String> {
 
     @Query("SELECT c FROM Client c JOIN c.cars ca WHERE ca.plate = :plate")
     Optional<Client> findByCars_Plate(@Param("plate")String plate);
