@@ -71,7 +71,7 @@ public class ClientService {
     public ClientDto updateClientByUcn(String ucn, ClientPatchDto request) {
         Client client = clientRepository.findById(ucn)
                 .orElseThrow(() -> new IllegalArgumentException("Client with this UCN does not exist"));
-                
+
         Optional.ofNullable(request.ucn()).ifPresent(client::setUcn);
         Optional.ofNullable(request.firstName()).ifPresent(client::setFirstName);
         Optional.ofNullable(request.lastName()).ifPresent(client::setLastName);

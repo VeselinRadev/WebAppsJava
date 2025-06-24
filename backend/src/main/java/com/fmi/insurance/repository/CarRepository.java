@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.fmi.insurance.model.Car;
 
 @Repository
-public interface CarRepository extends JpaRepository<Car, Long> {
+public interface CarRepository extends JpaRepository<Car, String> {
     Optional<Car> findByPlate(String plate);
 
     Optional<Car> findByVin(String vin);
