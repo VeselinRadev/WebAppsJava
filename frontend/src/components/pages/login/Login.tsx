@@ -34,10 +34,11 @@ const Login: React.FC = () => {
         secure: true,
         sameSite: 'Strict',
       });
-      console.log(useAuth().accessToken); //TODO console log is not shown
+
       navigate("/");
     } catch (error: any) {
-      setError(error.response.data.message); //TODO npe
+      const message = error?.response?.data?.message || "Something went wrong. Please try again.";
+      setError(message);
       console.error("Login failed:", error);
     }
   };

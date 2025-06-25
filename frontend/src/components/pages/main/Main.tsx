@@ -1,10 +1,9 @@
 import { Routes, Route } from "react-router-dom";
-import Login from "../login/Login.tsx";
+import Login from "/Dashboard.tsx";
 
 function Main() {
   return (
-      <Routes>
-        <Route path="/*" element={<Login />} />
+      <Routes><Route path="/*" element={<Dashboard />} />
       </Routes>
   );
 }
