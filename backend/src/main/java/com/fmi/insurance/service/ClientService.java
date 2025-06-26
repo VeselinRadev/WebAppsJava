@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.fmi.insurance.dto.ClientDto;
+import com.fmi.insurance.dto.ClientRequestDto;
 import com.fmi.insurance.dto.ClientPatchDto;
 import com.fmi.insurance.model.Address;
 import com.fmi.insurance.model.Client;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class ClientService {
     private final ClientRepository clientRepository;
 
-    public ClientDto createClient(ClientDto request) {
+    public ClientRequestDto createClient(ClientRequestDto request) {
         if (clientRepository.existsById(request.ucn())) {
             throw new IllegalArgumentException("Client with this UCN already exists");
         }
@@ -42,21 +42,21 @@ public class ClientService {
                 .build();
 
         clientRepository.save(client);
-        return ClientDto.fromEntity(client);
+        return ClientRequestDto.fromEntity(client);
     }
 
-    public List<ClientDto> getClients() {
+    public List<ClientRequestDto> getClients() {
         List<Client> clients = clientRepository.findAll();
         return clients.stream()
-                .map(ClientDto::fromEntity)
+                .map(ClientRequestDto::fromEntity)
                 .toList();
     }
 
-    public ClientDto getClientByUcn(String ucn) {
+    public ClientRequestDto getClientByUcn(String ucn) {
         Client client = clientRepository.findById(ucn)
                 .orElseThrow(() -> new IllegalArgumentException("Client with this UCN does not exist"));
 
-        return ClientDto.fromEntity(client);
+        return ClientRequestDto.fromEntity(client);
     }
 
     public void deleteClientByUcn(String ucn) {
@@ -67,7 +67,7 @@ public class ClientService {
         clientRepository.deleteById(ucn);
     }
 
-    public ClientDto updateClientByUcn(String ucn, ClientPatchDto request) {
+    public ClientRequestDto updateClientByUcn(String ucn, ClientPatchDto request) {
         Client client = clientRepository.findById(ucn)
                 .orElseThrow(() -> new IllegalArgumentException("Client with this UCN does not exist"));
 
@@ -89,6 +89,11 @@ public class ClientService {
         Optional.ofNullable(request.experienceYears()).ifPresent(client::setExperienceYears);
 
         clientRepository.save(client);
-        return ClientDto.fromEntity(client);
+        return ClientRequestDto.fromEntity(client);
+    }
+
+    Client getClientByIdInternal(Long id) {
+        return clientRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Client with this ID does not exist"));
     }
 }

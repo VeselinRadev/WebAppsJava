@@ -1,14 +1,12 @@
 package com.fmi.insurance.dto;
 
-import com.fmi.insurance.model.Car;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
 
-public record CarDto(
+public record CarRequestDto(
     @NotBlank(message = "Plate is required")
     @Size(min = 8, max = 8, message = "Plate must be exactly 8 characters")
     String plate,
@@ -43,18 +41,4 @@ public record CarDto(
 
     @NotBlank(message = "Fuel type is required")
     String fuelType
-){
-    public static CarDto fromEntity(Car car) {
-        return new CarDto(
-            car.getPlate(),
-            car.getVin(),
-            car.getMake(),
-            car.getModel(),
-            car.getYear(),
-            car.getVolume(),
-            car.getPower(),
-            car.getSeats(),
-            car.getFuelType() != null ? car.getFuelType().name() : null
-        );
-    }
-}
+){}

@@ -5,12 +5,13 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.fmi.insurance.dto.CarDto;
+import com.fmi.insurance.dto.CarRequestDto;
 import com.fmi.insurance.dto.CarPatchDto;
 import com.fmi.insurance.model.Car;
 import com.fmi.insurance.repository.CarRepository;
 import com.fmi.insurance.vo.EnumUtils;
 import com.fmi.insurance.vo.FuelType;
+import com.fmi.insurance.vo.InsuranceStatus;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class CarService {
     private final CarRepository carRepository;
 
-    public CarDto createCar(CarDto request) {
-        if (carRepository.existsById(request.plate())) {
+    public CarRequestDto createCar(CarRequestDto request) {
+        if (carRepository.existsByPlate(request.plate())) {
             throw new IllegalArgumentException("Car with this plate already exists");
         }
 
@@ -37,34 +38,35 @@ public class CarService {
                 .seats(request.seats())
                 .fuelType(request.fuelType() != null ? FuelType.valueOf(request.fuelType()) : null)
                 .build();
+
         carRepository.save(car);
-        return CarDto.fromEntity(car);
+        return CarRequestDto.fromEntity(car);
     }
 
-    public List<CarDto> getCars() {
+    public List<CarRequestDto> getCars() {
         List<Car> cars = carRepository.findAll();
         return cars.stream()
-                .map(CarDto::fromEntity)
+                .map(CarRequestDto::fromEntity)
                 .toList();
     }
 
-    public CarDto getCarByPlate(String plate) {
-        Car car = carRepository.findById(plate)
+    public CarRequestDto getCarByPlate(String plate) {
+        Car car = carRepository.findByPlate(plate)
                 .orElseThrow(() -> new IllegalArgumentException("Car with this plate does not exist"));
-        return CarDto.fromEntity(car);
+        return CarRequestDto.fromEntity(car);
     }
 
-    public CarDto getCarByVin(String vin) {
+    public CarRequestDto getCarByVin(String vin) {
         Car car = carRepository.findByVin(vin)
                 .orElseThrow(() -> new IllegalArgumentException("Car with this VIN does not exist"));
-        return CarDto.fromEntity(car);
+        return CarRequestDto.fromEntity(car);
     }
 
     public void deleteCarByPlate(String plate) {
-        if (!carRepository.existsById(plate)) {
+        if (!carRepository.existsByPlate(plate)) {
             throw new IllegalArgumentException("Car with this plate does not exist");
         }
-        carRepository.deleteById(plate);
+        carRepository.deleteByPlate(plate);
     }
 
     public void deleteCarByVin(String vin) {
@@ -73,11 +75,16 @@ public class CarService {
         carRepository.delete(car);
     }
 
-    public CarDto updateCarByPlate(String plate, CarPatchDto request) {
-        Car car = carRepository.findById(plate)
+    public CarRequestDto updateCarByPlate(String plate, CarPatchDto request) {
+        Car car = carRepository.findByPlate(plate)
                 .orElseThrow(() -> new IllegalArgumentException("Car with this plate does not exist"));
 
-        // insuranceService.getActiveInsuranceByCarPlate(plate) - if insurance is active, we should not allow updates
+        car.getInsurances().stream()
+                .filter(insurance -> insurance.getStatus() == InsuranceStatus.ACTIVE || insurance.getStatus() == InsuranceStatus.INCOMING)
+                .findFirst()
+                .ifPresent(_ -> {
+                    throw new IllegalArgumentException("Cannot update car with active or incoming insurance");
+                });
 
         Optional.ofNullable(request.plate()).ifPresent(car::setPlate);
         Optional.ofNullable(request.vin()).ifPresent(car::setVin);
@@ -91,15 +98,21 @@ public class CarService {
                 .ifPresent(fuelType -> car.setFuelType(EnumUtils.fromString(FuelType.class, fuelType)));
 
         carRepository.save(car);
-        return CarDto.fromEntity(car);
+        return CarRequestDto.fromEntity(car);
     }
 
-    public CarDto updateCarByVin(String vin, CarPatchDto request) {
-        Car car = carRepository.findById(vin)
+    public CarRequestDto updateCarByVin(String vin, CarPatchDto request) {
+        Car car = carRepository.findByVin(vin)
                 .orElseThrow(() -> new IllegalArgumentException("Car with this vin does not exist"));
 
-        // insuranceService.getActiveInsuranceByCarPlate(plate) - if insurance is active, we should not allow updates
+        car.getInsurances().stream()
+                .filter(insurance -> insurance.getStatus() == InsuranceStatus.ACTIVE || insurance.getStatus() == InsuranceStatus.INCOMING)
+                .findFirst()
+                .ifPresent(_ -> {
+                    throw new IllegalArgumentException("Cannot update car with active or incoming insurance");
+                });
 
+        
         Optional.ofNullable(request.plate()).ifPresent(car::setPlate);
         Optional.ofNullable(request.vin()).ifPresent(car::setVin);
         Optional.ofNullable(request.make()).ifPresent(car::setMake);
@@ -112,7 +125,12 @@ public class CarService {
                 .ifPresent(fuelType -> car.setFuelType(EnumUtils.fromString(FuelType.class, fuelType)));
 
         carRepository.save(car);
-        return CarDto.fromEntity(car);
+        return CarRequestDto.fromEntity(car);
+    }
+
+    Car getCarByIdInternal(Long id) {
+        return carRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Car with this id does not exist"));
     }
 
     Double getCarPrice(Car car) {

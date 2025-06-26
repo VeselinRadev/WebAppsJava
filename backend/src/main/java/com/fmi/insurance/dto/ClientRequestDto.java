@@ -1,13 +1,11 @@
 package com.fmi.insurance.dto;
 
-import com.fmi.insurance.model.Client;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record ClientDto(
+public record ClientRequestDto(
     @NotBlank(message = "UCN is required")
     @Size(min = 10, max = 10, message = "UCN must be exactly 10 characters")
     String ucn,
@@ -30,16 +28,4 @@ public record ClientDto(
     AddressDto address,
 
     Integer experienceYears
-) {
-    public static ClientDto fromEntity(Client client) {
-        return new ClientDto(
-                client.getUcn(),
-                client.getFirstName(),
-                client.getLastName(),
-                client.getEmail(),
-                client.getPhoneNumber(),
-                client.getAddress() != null ? AddressDto.fromEntity(client.getAddress()) : null,
-                client.getExperienceYears()
-        );
-    }
-}
+) {}

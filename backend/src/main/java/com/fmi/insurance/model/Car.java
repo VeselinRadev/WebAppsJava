@@ -84,12 +84,12 @@ public class Car {
     @OneToMany(orphanRemoval = true, mappedBy = "car")
     private Set<Insurance> insurances;
 
-    void addInsurance(Insurance insurance) {
+    public void addInsurance(Insurance insurance) {
         insurances.add(insurance);
         insurance.setCar(this);
     }
 
-    void removeInsurance(Insurance insurance) {
+    public void removeInsurance(Insurance insurance) {
         insurances.remove(insurance);
         insurance.setCar(null);
     }

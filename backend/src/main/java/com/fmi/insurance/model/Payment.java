@@ -48,11 +48,10 @@ public class Payment {
     @NotNull
     private Double amount;
 
-    // dont know how to handle this yet
-    // @Column(nullable = false)
-    // @NotNull
-    // @Enumerated(EnumType.STRING)
-    // private PaymentMethod paymentMethod;
+    @Column(nullable = false)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     public Boolean isPaid() {
         return this.paymentDate != null;

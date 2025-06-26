@@ -1,9 +1,7 @@
 package com.fmi.insurance.service;
 
-import java.security.cert.X509CRLSelector;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +9,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.fmi.insurance.dto.PaymentDto;
+import com.fmi.insurance.dto.PaymentResponseDto;
 import com.fmi.insurance.dto.PaymentPatchDto;
 import com.fmi.insurance.dto.PaymentSearchParamDto;
 import com.fmi.insurance.model.Car;
@@ -31,15 +29,15 @@ public class PaymentService {
 
     private final CarService carService;
 
-    public List<PaymentDto> getPayments(PaymentSearchParamDto searchParams) {
+    public List<PaymentResponseDto> getPayments(PaymentSearchParamDto searchParams) {
         return paymentRepository.findPaymentsByCriteria(searchParams).stream()
-                .map(PaymentDto::fromEntity)
+                .map(PaymentResponseDto::fromEntity)
                 .toList();
     }
 
-    public PaymentDto getPayment(Long id) {
+    public PaymentResponseDto getPayment(Long id) {
         return paymentRepository.findById(id)
-                .map(PaymentDto::fromEntity)
+                .map(PaymentResponseDto::fromEntity)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found with id: " + id));
     }
 
@@ -56,15 +54,15 @@ public class PaymentService {
                 .amount(carService.getCarPrice(car) / numberOfPayments)
                 .build();
 
-            insurance.addPayment(payment);
             payments.add(payment);
         }
 
+        paymentRepository.saveAll(payments);
 
         return payments;
     }
 
-    public PaymentDto updatePayment(Long id, PaymentPatchDto patch) {
+    public PaymentResponseDto updatePayment(Long id, PaymentPatchDto request) {
         Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found with id: " + id));
 
@@ -74,22 +72,28 @@ public class PaymentService {
             throw new IllegalArgumentException("Cannot mark payment as paid because there are unpaid payments with earlier due dates.");
         }
 
-        Optional.ofNullable(patch.paid()).ifPresent(paid -> {
+        Optional.ofNullable(request.paid()).ifPresent(paid -> {
             if (paid) {
                 payment.setPaymentDate(Date.valueOf(LocalDate.now()));
             }
         });
 
         paymentRepository.save(payment);
-        return PaymentDto.fromEntity(payment);
+        return PaymentResponseDto.fromEntity(payment);
     }
 
     private List<Date> generateDueDates(Integer numberOfPayments) {
         List<LocalDate> dates = new ArrayList<>();
         LocalDate today = LocalDate.now();
 
-        for (int i = 0; i < numberOfPayments; i++) {
-            dates.add(today.plusMonths(i * 3));
+        dates.add(today);
+        
+        if (numberOfPayments == 2) {
+            dates.add(today.plusMonths(6));
+        } else if (numberOfPayments == 4) {
+            dates.add(today.plusMonths(3));
+            dates.add(today.plusMonths(6));
+            dates.add(today.plusMonths(9));
         }
 
         return dates.stream()
