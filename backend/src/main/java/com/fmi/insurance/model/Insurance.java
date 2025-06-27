@@ -36,8 +36,7 @@ public class Insurance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    @NotNull
+    @Column(unique = true)
     private String policyNumber;
 
     @Column(nullable = false)

@@ -127,4 +127,9 @@ public class ClientService {
         return clientRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Client with this ID does not exist"));
     }
+
+    Client getClientByUcnInternal(String ucn) {
+        return clientRepository.findByUcn(ucn)
+                .orElseThrow(() -> new IllegalArgumentException("Client with this UCN does not exist"));
+    }
 }

@@ -15,7 +15,7 @@ public record InsuranceRequestDto(
     Date startDate,
 
     @NotBlank(message = "Sticker number is required")
-    @Size(min = 5, max = 20)
+    @Size(min = 9, max = 9, message = "Sticker number must be exactly 9 characters")
     String sticker,
 
     @NotBlank(message = "Green card number is required")
@@ -41,4 +41,5 @@ public record InsuranceRequestDto(
     public boolean isValidNumberOfPayments() {
         return numberOfPayments != null && (numberOfPayments == 1 || numberOfPayments == 2 || numberOfPayments == 4);
     }
+
 }

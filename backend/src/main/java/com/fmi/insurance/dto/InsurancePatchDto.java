@@ -3,6 +3,9 @@ package com.fmi.insurance.dto;
 import com.fmi.insurance.model.Insurance;
 import com.fmi.insurance.vo.InsuranceStatus;
 
+import lombok.Builder;
+
+@Builder
 public record InsurancePatchDto (
     InsuranceStatus status
 ){
