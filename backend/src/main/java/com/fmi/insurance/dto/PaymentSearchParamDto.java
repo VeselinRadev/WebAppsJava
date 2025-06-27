@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public record PaymentSearchParamDto(
     Long insuranceId,
-    Date afterDate,
-    Date beforeDate
+    Date beforeDate,
+    Date afterDate
 ) {
 }

@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
-
 public record CarPatchDto(
     @Size(min = 8, max = 8, message = "Plate must be exactly 8 characters")
     String plate,

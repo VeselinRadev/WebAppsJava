@@ -5,5 +5,4 @@ import com.fmi.insurance.vo.PaymentMethod;
 public record PaymentPatchDto(
     Boolean paid,
     PaymentMethod paymentMethod
-) 
-{}
+) {}

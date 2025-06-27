@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fmi.insurance.dto.CarRequestDto;
+import com.fmi.insurance.dto.CarResponseDto;
 import com.fmi.insurance.dto.CarPatchDto;
 import com.fmi.insurance.service.CarService;
 
@@ -26,30 +27,42 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping
-    public ResponseEntity<CarRequestDto> createCar(@Valid @RequestBody CarRequestDto request) {
-        CarRequestDto createdCar = carService.createCar(request);
+    public ResponseEntity<CarResponseDto> createCar(@Valid @RequestBody CarRequestDto request) {
+        CarResponseDto createdCar = carService.createCar(request);
         return ResponseEntity.ok(createdCar);
     }
 
     @GetMapping
-    public ResponseEntity<List<CarRequestDto>> getCars() {
-        List<CarRequestDto> cars = carService.getCars();
+    public ResponseEntity<List<CarResponseDto>> getCars() {
+        List<CarResponseDto> cars = carService.getCars();
         return ResponseEntity.ok(cars);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CarResponseDto> getCarById(@PathVariable Long id) {
+        CarResponseDto car = carService.getCarById(id);
+        return ResponseEntity.ok(car);
+    }
+
     @GetMapping("/{plate}")
-    public ResponseEntity<CarRequestDto> getCarByPlate(@PathVariable String plate) {
-        CarRequestDto car = carService.getCarByPlate(plate);
+    public ResponseEntity<CarResponseDto> getCarByPlate(@PathVariable String plate) {
+        CarResponseDto car = carService.getCarByPlate(plate);
         return ResponseEntity.ok(car);
     }
 
     @GetMapping("/{vin}")
-    public ResponseEntity<CarRequestDto> getCarByVin(@PathVariable String vin) {
-        CarRequestDto car = carService.getCarByVin(vin);
+    public ResponseEntity<CarResponseDto> getCarByVin(@PathVariable String vin) {
+        CarResponseDto car = carService.getCarByVin(vin);
         return ResponseEntity.ok(car);
     }
 
-     @DeleteMapping("/{plate}")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCarById(@PathVariable Long id) {
+        carService.deleteCarById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{plate}")
     public ResponseEntity<Void> deleteCarByPlate(@PathVariable String plate) {
         carService.deleteCarByPlate(plate);
         return ResponseEntity.noContent().build();
@@ -61,15 +74,21 @@ public class CarController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<CarResponseDto> updateCarById(@PathVariable Long id, @Valid @RequestBody CarPatchDto request) {
+        CarResponseDto updatedCar = carService.updateCarById(id, request);
+        return ResponseEntity.ok(updatedCar);
+    }
+
     @PatchMapping("/{plate}")
-    public ResponseEntity<CarRequestDto> updateCarByPlate(@PathVariable String plate, @Valid @RequestBody CarPatchDto request) {
-        CarRequestDto updatedCar = carService.updateCarByPlate(plate, request);
+    public ResponseEntity<CarResponseDto> updateCarByPlate(@PathVariable String plate, @Valid @RequestBody CarPatchDto request) {
+        CarResponseDto updatedCar = carService.updateCarByPlate(plate, request);
         return ResponseEntity.ok(updatedCar);
     }
 
     @PatchMapping("/{vin}")
-    public ResponseEntity<CarRequestDto> updateCarByVin(@PathVariable String vin, @Valid @RequestBody CarPatchDto request) {
-        CarRequestDto updatedCar = carService.updateCarByVin(vin, request);
+    public ResponseEntity<CarResponseDto> updateCarByVin(@PathVariable String vin, @Valid @RequestBody CarPatchDto request) {
+        CarResponseDto updatedCar = carService.updateCarByVin(vin, request);
         return ResponseEntity.ok(updatedCar);
     }
 }

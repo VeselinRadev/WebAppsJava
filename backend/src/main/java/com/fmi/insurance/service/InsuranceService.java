@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class InsuranceService {
-    
+
     private final InsuranceRepository insuranceRepository;
 
     private final CarService carService;
@@ -45,7 +45,7 @@ public class InsuranceService {
     }
 
     public InsuranceRequestDto createInsurance(InsuranceRequestDto request) {
-        
+
         Car car = carService.getCarByIdInternal(request.carId());
 
         List<Insurance> activeInsurances = insuranceRepository.findByCar_Plate(car.getPlate()).stream()
@@ -58,9 +58,9 @@ public class InsuranceService {
             Insurance existingInsurance = activeInsurances.get(0);
             if (existingInsurance.getStatus() == InsuranceStatus.INCOMING) {
                 throw new IllegalArgumentException("Car already has an incoming insurance");
-            } else if (existingInsurance.getStatus() == InsuranceStatus.ACTIVE) { 
+            } else if (existingInsurance.getStatus() == InsuranceStatus.ACTIVE) {
                 if (ChronoUnit.DAYS.between(LocalDate.now(), existingInsurance.getEndDate().toInstant()) > 30) {
-                    throw new IllegalArgumentException("Car already has an active insurance that is valid for more than 30 days");                      
+                    throw new IllegalArgumentException("Car already has an active insurance that is valid for more than 30 days");
                 }
 
                 if (ChronoUnit.DAYS.between(request.startDate().toInstant(), existingInsurance.getEndDate().toInstant()) >= 0) {
@@ -86,7 +86,7 @@ public class InsuranceService {
             .status(LocalDate.now().isBefore(request.startDate().toLocalDate()) ? InsuranceStatus.INCOMING : InsuranceStatus.ACTIVE)
             .build();
 
-        
+
         List<Payment> payments = paymentService.createPayments(insurance, car, request.numberOfPayments());
 
         payments.forEach(payment -> {

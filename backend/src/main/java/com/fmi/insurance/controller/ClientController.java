@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fmi.insurance.dto.ClientRequestDto;
+import com.fmi.insurance.dto.ClientResponseDto;
 import com.fmi.insurance.dto.ClientPatchDto;
 import com.fmi.insurance.service.ClientService;
 
@@ -26,21 +27,33 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping
-    public ResponseEntity<ClientRequestDto> createClient(@Valid @RequestBody ClientRequestDto request) {
-        ClientRequestDto createdClient = clientService.createClient(request);
+    public ResponseEntity<ClientResponseDto> createClient(@Valid @RequestBody ClientRequestDto request) {
+        ClientResponseDto createdClient = clientService.createClient(request);
         return ResponseEntity.ok(createdClient);
     }
 
     @GetMapping
-    public ResponseEntity<List<ClientRequestDto>> getClients() {
-        List<ClientRequestDto> clients = clientService.getClients();
+    public ResponseEntity<List<ClientResponseDto>> getClients() {
+        List<ClientResponseDto> clients = clientService.getClients();
         return ResponseEntity.ok(clients);
     }
 
-    @GetMapping("/{ucn}")
-    public ResponseEntity<ClientRequestDto> getClientByUcn(@PathVariable String ucn) {
-        ClientRequestDto client = clientService.getClientByUcn(ucn);
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientResponseDto> getClientById(@PathVariable Long id) {
+        ClientResponseDto client = clientService.getClientById(id);
         return ResponseEntity.ok(client);
+    }
+
+    @GetMapping("/{ucn}")
+    public ResponseEntity<ClientResponseDto> getClientByUcn(@PathVariable String ucn) {
+        ClientResponseDto client = clientService.getClientByUcn(ucn);
+        return ResponseEntity.ok(client);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClientById(@PathVariable Long id) {
+        clientService.deleteClientById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{ucn}")
@@ -49,9 +62,15 @@ public class ClientController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<ClientResponseDto> updateClientById(@PathVariable Long id, @Valid @RequestBody ClientPatchDto request) {
+        ClientResponseDto updatedClient = clientService.updateClientById(id, request);
+        return ResponseEntity.ok(updatedClient);
+    }
+
     @PatchMapping("/{ucn}")
-    public ResponseEntity<ClientRequestDto> updateClientByUcn(@PathVariable String ucn, @Valid @RequestBody ClientPatchDto request) {
-        ClientRequestDto updatedClient = clientService.updateClientByUcn(ucn, request);
+    public ResponseEntity<ClientResponseDto> updateClientByUcn(@PathVariable String ucn, @Valid @RequestBody ClientPatchDto request) {
+        ClientResponseDto updatedClient = clientService.updateClientByUcn(ucn, request);
         return ResponseEntity.ok(updatedClient);
     }
 
