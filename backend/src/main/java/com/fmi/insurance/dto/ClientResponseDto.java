@@ -2,7 +2,8 @@ package com.fmi.insurance.dto;
 
 import com.fmi.insurance.model.Client;
 
-public record ClientDto(
+public record ClientResponseDto(
+    Long id,
     String ucn,
     String firstName,
     String lastName,
@@ -11,8 +12,9 @@ public record ClientDto(
     AddressDto address,
     Integer experienceYears
 ) {
-    public static ClientDto fromEntity(Client client) {
-        return new ClientDto(
+    public static ClientResponseDto fromEntity(Client client) {
+        return new ClientResponseDto(
+                client.getId(),
                 client.getUcn(),
                 client.getFirstName(),
                 client.getLastName(),

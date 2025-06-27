@@ -5,6 +5,8 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -25,6 +27,11 @@ import lombok.Setter;
 public class Client {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    @NotNull
     private String ucn;
 
     @Column(nullable = false)
@@ -55,23 +62,23 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private Set<Insurance> insurances;
-    
-    void addCar(Car car) {
+
+    public void addCar(Car car) {
         cars.add(car);
         car.setClient(this);
     }
 
-    void removeCar(Car car) {
+    public void removeCar(Car car) {
         cars.remove(car);
         car.setClient(null);
     }
 
-    void addInsurance(Insurance insurance) {
+    public void addInsurance(Insurance insurance) {
         insurances.add(insurance);
         insurance.setClient(this);
     }
 
-    void removeInsurance(Insurance insurance) {
+    public void removeInsurance(Insurance insurance) {
         insurances.remove(insurance);
         insurance.setClient(null);
     }
