@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fmi.insurance.dto.InsuranceRequestDto;
@@ -98,7 +99,7 @@ public class InsuranceService {
 
         insuranceRepository.save(insurance);
 
-        String policyNumber = "GO-" + String.format("%d%06d",LocalDate.now().getYear(), insurance.getId());
+        String policyNumber = "GO-" + String.format("%d%06d",LocalDate.now().getYear() % 100, insurance.getId());
         insurance.setPolicyNumber(policyNumber);
         insuranceRepository.save(insurance);
 
@@ -116,5 +117,19 @@ public class InsuranceService {
         insurance.setStatus(request.status());
 
         return InsuranceResponseDto.fromEntity(insuranceRepository.save(insurance));
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void checkInsurances() {
+        LocalDate today = LocalDate.now();
+        List<Insurance> insurances = insuranceRepository.findByStatus(InsuranceStatus.ACTIVE).stream()
+            .filter(insurance -> insurance.getEndDate().toLocalDate().isBefore(today))
+            .map(insurance -> {
+                insurance.setStatus(InsuranceStatus.EXPIRED);
+                return insurance;
+            })
+            .toList();
+        
+        insuranceRepository.saveAll(insurances);
     }
 }
