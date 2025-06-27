@@ -1,5 +1,6 @@
 package com.fmi.insurance.service;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.fmi.insurance.dto.InsuranceRequestDto;
+import com.fmi.insurance.dto.InsuranceResponseDto;
 import com.fmi.insurance.dto.InsurancePatchDto;
 import com.fmi.insurance.dto.InsuranceSearchParamDto;
 import com.fmi.insurance.model.Car;
@@ -32,21 +34,21 @@ public class InsuranceService {
 
     private final PaymentService paymentService;
 
-    public List<InsuranceRequestDto> getInsurances(InsuranceSearchParamDto searchParams) {
+    public List<InsuranceResponseDto> getInsurances(InsuranceSearchParamDto searchParams) {
         return insuranceRepository.findInsurancesByCriteria(searchParams).stream()
-            .map(InsuranceRequestDto::fromEntity)
+            .map(InsuranceResponseDto::fromEntity)
             .toList();
     }
 
-    public InsuranceRequestDto getInsuranceById(Long id) {
+    public InsuranceResponseDto getInsuranceById(Long id) {
         return insuranceRepository.findById(id)
-            .map(InsuranceRequestDto::fromEntity)
+            .map(InsuranceResponseDto::fromEntity)
             .orElseThrow(() -> new IllegalArgumentException("Insurance not found with id: " + id));
     }
 
-    public InsuranceRequestDto createInsurance(InsuranceRequestDto request) {
+    public InsuranceResponseDto createInsurance(InsuranceRequestDto request) {
         
-        Car car = carService.getCarByIdInternal(request.carId());
+        Car car = carService.getCarByPlateInternal(request.plate());
 
         List<Insurance> activeInsurances = insuranceRepository.findByCar_Plate(car.getPlate()).stream()
             .filter(insurance -> insurance.getStatus() == InsuranceStatus.ACTIVE || insurance.getStatus() == InsuranceStatus.INCOMING)
@@ -70,14 +72,13 @@ public class InsuranceService {
             }
         }
 
-        Client client = clientService.getClientByIdInternal(request.clientId());
+        Client client = clientService.getClientByUcnInternal(request.ucn());
 
         // generate policy number
 
         Insurance insurance = Insurance.builder()
-            .policyNumber(request.policyNumber())
             .startDate(request.startDate())
-            .endDate(request.endDate())
+            .endDate(Date.valueOf(request.startDate().toLocalDate().plusYears(1)))
             .sticker(request.sticker())
             .greenCard(request.greenCard())
             .details(request.details())
@@ -97,10 +98,14 @@ public class InsuranceService {
 
         insuranceRepository.save(insurance);
 
-        return InsuranceRequestDto.fromEntity(insurance);
+        String policyNumber = "GO-" + String.format("%d%06d",LocalDate.now().getYear(), insurance.getId());
+        insurance.setPolicyNumber(policyNumber);
+        insuranceRepository.save(insurance);
+
+        return InsuranceResponseDto.fromEntity(insurance);
     }
 
-    public InsuranceRequestDto updateInsuranceById(Long id, InsurancePatchDto request) {
+    public InsuranceResponseDto updateInsuranceById(Long id, InsurancePatchDto request) {
         Insurance insurance = insuranceRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Insurance not found with id: " + id));
 
@@ -110,6 +115,6 @@ public class InsuranceService {
 
         insurance.setStatus(request.status());
 
-        return InsuranceRequestDto.fromEntity(insuranceRepository.save(insurance));
+        return InsuranceResponseDto.fromEntity(insuranceRepository.save(insurance));
     }
 }
