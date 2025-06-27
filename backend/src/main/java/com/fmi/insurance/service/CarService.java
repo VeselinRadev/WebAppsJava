@@ -114,4 +114,56 @@ public class CarService {
         carRepository.save(car);
         return CarDto.fromEntity(car);
     }
+
+    Double getCarPrice(Car car) {
+
+        return 300 * getAgeMultiplier(car.getRegistrationYear())
+                * getVolumeMultiplier(car.getVolume())
+                * getPowerMultiplier(car.getPower())
+                * getSeatsMultiplier(car.getSeats())
+                * getFuelMultiplier(car.getFuelType());        
+    }
+
+    private double getAgeMultiplier(int age) {
+        if (age <= 5) return 0.95;
+        else if (age <= 10) return 1.00;
+        else if (age <= 20) return 1.10;
+        else return 1.20;
+    }
+
+    private double getVolumeMultiplier(int volume) {
+        if (volume < 2000) return 0.90;
+        else if (volume <= 2400) return 1.00;
+        else if (volume <= 2700) return 1.10;
+        else return 1.20;
+    }
+
+    private double getPowerMultiplier(int power) {
+        if (power < 100) return 0.95;
+        else if (power <= 150) return 1.00;
+        else return 1.15;
+    }
+
+    private double getSeatsMultiplier(int seats) {
+        if (seats <= 5) return 1.00;
+        else if (seats <= 9) return 1.10;
+        else return 1.25;
+    }
+
+    private double getFuelMultiplier(FuelType fuel) {
+        switch (fuel) {
+            case GASOLINE:
+                return 1.00;
+            case DIESEL:
+                return 1.10;
+            case LPG:
+                return 0.95;
+            case HYBRID:
+                return 0.90;
+            case ELECTRIC:
+                return 0.85;
+            default:
+                return 1.00;
+        }
+    }
 }

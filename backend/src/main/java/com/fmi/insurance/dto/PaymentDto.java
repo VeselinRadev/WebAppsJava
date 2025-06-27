@@ -7,7 +7,7 @@ public record PaymentDto (
     String paymentDate,
     Double amount,
     String method,
-    boolean isPaid
+    Boolean isPaid
 ) {
     public static PaymentDto fromEntity(Payment payment) {
         return new PaymentDto(

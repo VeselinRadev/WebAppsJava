@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.fmi.insurance.model.Payment;
+import com.fmi.insurance.repository.custom.PaymentRepositoryCustom;
 import com.fmi.insurance.vo.PaymentMethod;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, Long> {
+public interface PaymentRepository extends JpaRepository<Payment, Long>, PaymentRepositoryCustom {
     List<Payment> findByInsurance_PolicyNumber(String policyNumber);
 
     List<Payment> findByIsPaid(boolean isPaid);
@@ -26,4 +27,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findByIsPaidFalseAndInsurance_PolicyNumberOrderByDueDateAsc(String policyNumber);
 
     List<Payment> findByPaymentMethod(PaymentMethod paymentMethod);
+
 }

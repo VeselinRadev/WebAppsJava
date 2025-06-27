@@ -36,8 +36,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    @NotNull
+    @Column
     private Date paymentDate;
 
     @Column(nullable = false)
@@ -49,14 +48,15 @@ public class Payment {
     @NotNull
     private Double amount;
 
-    @Column(nullable = false)
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
+    // dont know how to handle this yet
+    // @Column(nullable = false)
+    // @NotNull
+    // @Enumerated(EnumType.STRING)
+    // private PaymentMethod paymentMethod;
 
-    @Column(nullable = false)
-    @NotNull
-    private boolean isPaid;
+    public Boolean isPaid() {
+        return this.paymentDate != null;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_id", nullable = false)
