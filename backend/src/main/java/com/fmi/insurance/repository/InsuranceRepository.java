@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fmi.insurance.model.Insurance;
 import com.fmi.insurance.repository.custom.InsuranceRepositoryCustom;
+import com.fmi.insurance.vo.InsuranceStatus;
 
 @Repository
 public interface InsuranceRepository extends JpaRepository<Insurance, Long>, InsuranceRepositoryCustom {
@@ -20,4 +21,6 @@ public interface InsuranceRepository extends JpaRepository<Insurance, Long>, Ins
     List<Insurance> findByClient_Ucn(String ucn);
 
     List<Insurance> findByInsurer_Username(String username);
+
+    List<Insurance> findByStatus(InsuranceStatus status);
 }

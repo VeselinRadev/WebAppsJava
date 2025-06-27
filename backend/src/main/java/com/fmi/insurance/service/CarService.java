@@ -147,6 +147,11 @@ public class CarService {
                 .orElseThrow(() -> new IllegalArgumentException("Car with this id does not exist"));
     }
 
+    Car getCarByPlateInternal(String plate) {
+        return carRepository.findByPlate(plate)
+                .orElseThrow(() -> new IllegalArgumentException("Car with this plate does not exist"));
+    }
+
     Double getCarPrice(Car car) {
 
         return 300 * getAgeMultiplier(car.getRegistrationYear())

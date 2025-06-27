@@ -7,15 +7,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fmi.insurance.dto.PaymentResponseDto;
+import com.fmi.insurance.dto.InsurancePatchDto;
 import com.fmi.insurance.dto.PaymentPatchDto;
 import com.fmi.insurance.dto.PaymentSearchParamDto;
 import com.fmi.insurance.model.Car;
 import com.fmi.insurance.model.Insurance;
 import com.fmi.insurance.model.Payment;
 import com.fmi.insurance.repository.PaymentRepository;
+import com.fmi.insurance.vo.InsuranceStatus;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,8 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
 
     private final CarService carService;
+
+    private final InsuranceService insuranceService;
 
     public List<PaymentResponseDto> getPayments(PaymentSearchParamDto searchParams) {
         return paymentRepository.findPaymentsByCriteria(searchParams).stream()
@@ -66,7 +71,12 @@ public class PaymentService {
         Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found with id: " + id));
 
-        Set<Payment> payments = payment.getInsurance().getPayments();
+        Insurance insurance = payment.getInsurance();
+        if (insurance.getStatus() != InsuranceStatus.ACTIVE) {
+            throw new IllegalArgumentException("Cannot update payment for insurance that is not active");
+        }
+
+        Set<Payment> payments = insurance.getPayments();
 
         if (payments.stream().anyMatch(payment1 -> !payment1.isPaid() && payment1.getId() != id && payment1.getDueDate().before(payment.getDueDate()))) {
             throw new IllegalArgumentException("Cannot mark payment as paid because there are unpaid payments with earlier due dates.");
@@ -100,4 +110,26 @@ public class PaymentService {
                 .map(Date::valueOf)
                 .toList();
     }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void checkPayments() {
+        LocalDate today = LocalDate.now().plusDays(15); 
+        PaymentSearchParamDto searchParams = PaymentSearchParamDto.builder()
+                .afterDate(Date.valueOf(today))
+                .build();
+
+        paymentRepository.findPaymentsByCriteria(searchParams).stream()
+                .filter(payment -> !payment.isPaid())
+                .map(Payment::getInsurance)
+                .distinct()
+                .peek(insurance -> {
+                    InsurancePatchDto insurancePatchDto = InsurancePatchDto.builder()
+                            .status(InsuranceStatus.ANNULLED)
+                            .build();
+
+                    insuranceService.updateInsuranceById(insurance.getId(), insurancePatchDto);
+                });
+    }
+
+
 }
