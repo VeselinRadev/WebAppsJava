@@ -19,12 +19,12 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
+          <Route
           path="/*"
           element={
-            <PrivateRoute>
+            //<PrivateRoute>
               <Main />
-            </PrivateRoute>
+            //</PrivateRoute>
           }
         />
       </Routes>
