@@ -18,6 +18,13 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     List<Car> findByClient_Ucn(String ucn);
 
+    Boolean existsByPlate(String plate);
+
+    Boolean existsByVin(String vin);
+
+    void deleteByPlate(String plate);
+
     @Query("SELECT c FROM Car c JOIN c.insurances i WHERE i.policyNumber = :policyNumber")
     Optional<Car> findByInsurances_PolicyNumber(@Param("policyNumber")String policyNumber);
+
 }

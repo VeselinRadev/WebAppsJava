@@ -2,7 +2,8 @@ package com.fmi.insurance.dto;
 
 import com.fmi.insurance.model.Car;
 
-public record CarDto(
+public record CarResponseDto(
+    Long id,
     String plate,
     String vin,
     String make,
@@ -12,9 +13,10 @@ public record CarDto(
     Integer power,
     Integer seats,
     String fuelType
-){
-    public static CarDto fromEntity(Car car) {
-        return new CarDto(
+) {
+    public static CarResponseDto fromEntity(Car car) {
+        return new CarResponseDto(
+            car.getId(),
             car.getPlate(),
             car.getVin(),
             car.getMake(),
@@ -25,5 +27,5 @@ public record CarDto(
             car.getSeats(),
             car.getFuelType() != null ? car.getFuelType().name() : null
         );
-    }   
+    }
 }
