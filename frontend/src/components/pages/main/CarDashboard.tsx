@@ -29,7 +29,7 @@ interface Car {
 }
 
 export default function CarDashboard() {
-    const { getCars, createCar, updateCar, deleteCar, getClients  } = useInsurance();
+    const { getCars, createCar, updateCar, deleteCar  } = useInsurance();
 
     const [cars, setCars] = useState<Car[]>([]);
     const [loading, setLoading] = useState(false);
@@ -106,7 +106,15 @@ export default function CarDashboard() {
                         onClick={() => {
                             setEditingCar(record);
                             form.setFieldsValue({
-                                ...record,
+                                vin: record.vin,
+                                make: record.make,
+                                model: record.model,
+                                year: record.year,
+                                volume: record.volume,
+                                power: record.power,
+                                seats: record.seats,
+                                registrationYear: record.registrationYear,
+                                fuelType: record.fuelType,
                                 clientUcn: record.clientUcn ?? null,
                             });
                             setIsModalVisible(true);

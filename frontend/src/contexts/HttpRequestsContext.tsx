@@ -84,7 +84,6 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             const res = await axiosInstance.get("/cars");
             return Array.isArray(res.data) ? res.data : [];
         } catch (err) {
-            message.warning("Using mock cars");
         }
     };
 
@@ -117,7 +116,6 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             const res = await axiosInstance.get("/clients");
             return Array.isArray(res.data) ? res.data : [];
         } catch (err) {
-            message.warning("Using mock clients");
         }
     };
 

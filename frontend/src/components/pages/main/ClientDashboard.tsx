@@ -16,8 +16,7 @@ import { useInsurance } from "../../../contexts/HttpRequestsContext";
 interface Address {
     street?: string;
     city?: string;
-    zipCode?: string;
-    country?: string;
+    postalCode?: string;
 }
 
 interface Client {
@@ -50,14 +49,13 @@ export default function ClientDashboard() {
     }, []);
 
     const handleSave = async (values: any) => {
-        const { street, city, zipCode, country, ...rest } = values;
+        const { street, city, postalCode, ...rest } = values;
         const payload = {
             ...rest,
             address: {
                 street,
                 city,
-                zipCode,
-                country,
+                postalCode,
             },
         };
 
@@ -110,7 +108,9 @@ export default function ClientDashboard() {
                             setEditingClient(record);
                             form.setFieldsValue({
                                 ...record,
-                                ...record.address,
+                                street: record.address?.street ?? "",
+                                city: record.address?.city ?? "",
+                                postalCode: record.address?.postalCode ?? "",
                             });
                             setIsModalVisible(true);
                         }}
@@ -189,10 +189,7 @@ export default function ClientDashboard() {
                             <Form.Item name="city" label="City">
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="zipCode" label="Zip Code">
-                                <Input />
-                            </Form.Item>
-                            <Form.Item name="country" label="Country">
+                            <Form.Item name="postalCode" label="Postal Code">
                                 <Input />
                             </Form.Item>
                             <Form.Item>

@@ -13,6 +13,7 @@ public record CarResponseDto(
     Integer power,
     Integer seats,
     String fuelType,
+    Integer registrationYear,
     String clientUcn,
     Long clientId
 ) {
@@ -28,6 +29,7 @@ public record CarResponseDto(
             car.getPower(),
             car.getSeats(),
             car.getFuelType() != null ? car.getFuelType().name() : null,
+            car.getRegistrationYear(),
             car.getClient().getUcn(),
             car.getClient().getId()
         );
