@@ -32,6 +32,7 @@ interface HttpRequestsContextType {
     getPaymentsByInsuranceId: (insuranceId: number) => Promise<any[]>;
     getClientByInsuranceId: (insuranceId: number) => Promise<any>;
     getCarByInsuranceId: (insuranceId: number) => Promise<any>;
+    anulateInsurance: (id: number) => Promise<void>;
 }
 
 const HttpRequestsContext = createContext<HttpRequestsContextType | null>(null);
@@ -171,11 +172,14 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         }
     };
 
-    const updatePayment = async (id: number, data: any) => {
+
+    const updatePayment = async (id: number, data: { paid: boolean, paymentMethod: string }) => {
         try {
-            await axiosInstance.put(`/payments/${id}`, data);
-        } catch {
-            message.error("Failed to update payment");
+            await axiosInstance.patch(`/payments/${id}`, data);
+            message.success("Payment updated.");
+        } catch (err: any) {
+            const msg = err?.response?.data?.message || err?.message || "Failed to update payment.";
+            message.error(msg);
         }
     };
 
@@ -250,6 +254,19 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             message.error(res);
         }
     };
+
+    const anulateInsurance = async (id: number) => {
+        try {
+            await axiosInstance.patch(`/insurances/${id}`, {
+                status: "ANNULLED",
+            });
+            message.success("Insurance annulated.");
+        } catch (err: any) {
+            const msg =
+                err?.response?.data?.message || err?.message || "Failed to annulate insurance.";
+            message.error(msg);
+        }
+    };
     return (
         <HttpRequestsContext.Provider
             value={{
@@ -273,6 +290,7 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 getPaymentsByInsuranceId,
                 getClientByInsuranceId,
                 getCarByInsuranceId,
+                anulateInsurance,
             }}
         >
             {children}

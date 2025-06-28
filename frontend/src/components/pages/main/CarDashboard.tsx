@@ -53,7 +53,7 @@ export default function CarDashboard() {
 
     const fetchClients = async () => {
         try {
-            const { clients } = await getDependencies();
+            //const { clients } = await getDependencies();
             setClients(clients);
         } catch (err) {
             console.error("Failed to fetch clients", err);

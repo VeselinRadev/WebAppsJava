@@ -85,7 +85,8 @@ public class PaymentService {
                 payment.setPaymentDate(Date.valueOf(LocalDate.now()));
             }
         });
-        //add optional for payment method
+        Optional.ofNullable(request.paymentMethod()).ifPresent(payment::setPaymentMethod);
+
         paymentRepository.save(payment);
         return PaymentResponseDto.fromEntity(payment);
     }

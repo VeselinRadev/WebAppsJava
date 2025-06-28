@@ -16,6 +16,7 @@ import {
     Card,
     Row,
     Col,
+    Popconfirm,
 } from "antd";
 import dayjs from "dayjs";
 import Sidebar from "./main/main-components/Sidebar";
@@ -32,6 +33,8 @@ export default function InsuranceDetailsPage() {
         updateInsurance,
         getClientByInsuranceId,
         getCarByInsuranceId,
+        anulateInsurance,
+        updatePayment,
     } = useInsurance();
 
     const [insurance, setInsurance] = useState<any>(null);
@@ -42,6 +45,9 @@ export default function InsuranceDetailsPage() {
     const [isEditVisible, setIsEditVisible] = useState(false);
     const [form] = Form.useForm();
     const [editForm] = Form.useForm();
+    const [isPayModalVisible, setIsPayModalVisible] = useState(false);
+    const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(null);
+    const [payForm] = Form.useForm();
 
     const fetchInsurance = async () => {
         const all = await getInsurances();
@@ -131,13 +137,20 @@ export default function InsuranceDetailsPage() {
         { title: "Date", dataIndex: "paymentDate", key: "paymentDate" },
         { title: "Due", dataIndex: "dueDate", key: "dueDate" },
         { title: "Amount", dataIndex: "amount", key: "amount" },
-        { title: "Method", dataIndex: "paymentMethod", key: "paymentMethod" },
+        { title: "Method", dataIndex: "method", key: "method" },
         {
-            title: "Paid",
-            dataIndex: "isPaid",
-            key: "isPaid",
-            render: (val: boolean) => (val ? "Yes" : "No"),
-        },
+            title: "Actions",
+            key: "actions",
+            render: (_: any, record: any) =>
+                !record.isPaid && (
+                    <Button type="link" onClick={() => {
+                        setSelectedPaymentId(record.id);
+                        setIsPayModalVisible(true);
+                    }}>
+                        Pay
+                    </Button>
+                ),
+        }
     ];
 
     return (
@@ -146,7 +159,24 @@ export default function InsuranceDetailsPage() {
             <main style={{ flex: 1, padding: 32, overflowY: "auto" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
                     <h2>Insurance ID: {insuranceId}</h2>
-                    <Button onClick={() => setIsEditVisible(true)}>Edit Insurance</Button>
+                    <Popconfirm
+                        title="Are you sure you want to anulate this insurance?"
+                        onConfirm={async () => {
+                            try {
+                                await anulateInsurance(id);
+                                await fetchInsurance();
+                            } catch (e) {
+                                console.error("Annulation failed:", e);
+                            }
+                        }}
+                        okText="Yes"
+                        cancelText="No"
+                        disabled={insurance?.status === "ANNULLED"}
+                    >
+                        <Button danger disabled={insurance?.status === "ANNULLED"}>
+                            {insurance?.status === "ANNULLED" ? "Anulated" : "Anulate"}
+                        </Button>
+                    </Popconfirm>
                 </div>
 
                 {insurance ? (
@@ -203,24 +233,51 @@ export default function InsuranceDetailsPage() {
                 />
 
                 <Modal
-                    title="New Payment"
-                    open={isModalVisible}
+                    title="Confirm Payment"
+                    open={isPayModalVisible}
                     onCancel={() => {
-                        setIsModalVisible(false);
-                        form.resetFields();
+                        setIsPayModalVisible(false);
+                        setSelectedPaymentId(null);
+                        payForm.resetFields();
                     }}
                     footer={null}
                 >
-                    <Form layout="vertical" form={form} onFinish={handleSavePayment}>
-                        <Form.Item name="paymentDate" label="Payment Date" rules={[{ required: true }]}> <DatePicker style={{ width: "100%" }} /> </Form.Item>
-                        <Form.Item name="dueDate" label="Due Date" rules={[{ required: true }]}> <DatePicker style={{ width: "100%" }} /> </Form.Item>
-                        <Form.Item name="amount" label="Amount" rules={[{ required: true }]}> <Input type="number" /> </Form.Item>
-                        <Form.Item name="paymentMethod" label="Payment Method" rules={[{ required: true }]}> <Select> <Select.Option value="CASH">Cash</Select.Option> <Select.Option value="CARD">Card</Select.Option> <Select.Option value="TRANSFER">Transfer</Select.Option> </Select> </Form.Item>
-                        <Form.Item name="isPaid" label="Is Paid" valuePropName="checked"> <Switch /> </Form.Item>
+                    <Form
+                        layout="vertical"
+                        form={payForm}
+                        onFinish={async (values) => {
+                            if (!selectedPaymentId) return;
+                            try {
+                                await updatePayment(selectedPaymentId, {
+                                    paid: true,
+                                    paymentMethod: values.method,
+                                });
+                                message.success("Marked as paid.");
+                                setIsPayModalVisible(false);
+                                setSelectedPaymentId(null);
+                                payForm.resetFields();
+                                fetchPayments();
+                            } catch (err) {
+                                console.error("Payment update failed", err);
+                            }
+                        }}
+                    >
+                        <Form.Item
+                            name="method"
+                            label="Payment Method"
+                            rules={[{ required: true, message: "Please select payment method" }]}
+                        >
+                            <Select placeholder="Select method">
+                                <Select.Option value="CREDIT_CARD">Credit Card</Select.Option>
+                                <Select.Option value="BANK_TRANSFER">Bank Transfer</Select.Option>
+                                <Select.Option value="CASH">Cash</Select.Option>
+                                <Select.Option value="OTHER">Other</Select.Option>
+                            </Select>
+                        </Form.Item>
                         <Form.Item>
                             <Space>
-                                <Button type="primary" htmlType="submit">Save</Button>
-                                <Button onClick={() => setIsModalVisible(false)}>Cancel</Button>
+                                <Button type="primary" htmlType="submit">Confirm</Button>
+                                <Button onClick={() => setIsPayModalVisible(false)}>Cancel</Button>
                             </Space>
                         </Form.Item>
                     </Form>

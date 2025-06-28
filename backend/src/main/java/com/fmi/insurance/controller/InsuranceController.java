@@ -53,9 +53,8 @@ public class InsuranceController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<InsurancePatchDto> updateInsuranceById(@PathVariable Long id, @Valid @RequestBody InsurancePatchDto request) {
-         InsuranceDto updatedInsurance = insuranceService.updateInsuranceById(id, request);
+    public ResponseEntity<InsuranceResponseDto> updateInsuranceById(@PathVariable Long id, @Valid @RequestBody InsurancePatchDto request) {
+         InsuranceResponseDto updatedInsurance = insuranceService.updateInsuranceById(id, request);
          return ResponseEntity.ok(updatedInsurance);
-        return ResponseEntity.ok(new InsurancePatchDto()); // Placeholder for actual implementation
     }
 }
