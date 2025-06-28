@@ -39,11 +39,11 @@ public class CarController {
         return ResponseEntity.ok(cars);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CarResponseDto> getCarById(@PathVariable Long id) {
-        CarResponseDto car = carService.getCarById(id);
-        return ResponseEntity.ok(car);
-    }
+    // @GetMapping("/{id}")
+    // public ResponseEntity<CarResponseDto> getCarById(@PathVariable Long id) {
+    //     CarResponseDto car = carService.getCarById(id);
+    //     return ResponseEntity.ok(car);
+    // }
 
     @GetMapping("/insurance/{insuranceId}")
     public ResponseEntity<CarResponseDto> getClientByInsuranceId(@PathVariable Long insuranceId) {
@@ -57,11 +57,11 @@ public class CarController {
         return ResponseEntity.ok(car);
     }
 
-    @GetMapping("/{vin}")
-    public ResponseEntity<CarResponseDto> getCarByVin(@PathVariable String vin) {
-        CarResponseDto car = carService.getCarByVin(vin);
-        return ResponseEntity.ok(car);
-    }
+    // @GetMapping("/{vin}")
+    // public ResponseEntity<CarResponseDto> getCarByVin(@PathVariable String vin) {
+    //     CarResponseDto car = carService.getCarByVin(vin);
+    //     return ResponseEntity.ok(car);
+    // }
 
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> deleteCarById(@PathVariable Long id) {

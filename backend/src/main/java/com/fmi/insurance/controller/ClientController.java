@@ -38,11 +38,11 @@ public class ClientController {
         return ResponseEntity.ok(clients);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClientResponseDto> getClientById(@PathVariable Long id) {
-        ClientResponseDto client = clientService.getClientById(id);
-        return ResponseEntity.ok(client);
-    }
+    // @GetMapping("/{id}")
+    // public ResponseEntity<ClientResponseDto> getClientById(@PathVariable Long id) {
+    //     ClientResponseDto client = clientService.getClientById(id);
+    //     return ResponseEntity.ok(client);
+    // }
 
     @GetMapping("/insurance/{insuranceId}")
     public ResponseEntity<ClientResponseDto> getClientByInsuranceId(@PathVariable Long insuranceId) {
