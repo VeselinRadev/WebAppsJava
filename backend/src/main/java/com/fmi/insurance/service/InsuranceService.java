@@ -61,6 +61,10 @@ public class InsuranceService {
             .filter(insurance -> insurance.getStatus() == InsuranceStatus.ACTIVE || insurance.getStatus() == InsuranceStatus.INCOMING)
             .toList();
 
+        if (ChronoUnit.DAYS.between(LocalDate.now(), request.startDate().toLocalDate()) > 30) {
+            throw new IllegalArgumentException("Insurance start date must be within 30 days");
+        }
+        
         if (activeInsurances.size() >= 2) {
             throw new IllegalArgumentException("Car already has an active and incoming insurance");
         } else if (activeInsurances.size() == 1) {
@@ -68,16 +72,18 @@ public class InsuranceService {
             if (existingInsurance.getStatus() == InsuranceStatus.INCOMING) {
                 throw new IllegalArgumentException("Car already has an incoming insurance");
             } else if (existingInsurance.getStatus() == InsuranceStatus.ACTIVE) {
-                if (ChronoUnit.DAYS.between(LocalDate.now(), existingInsurance.getEndDate().toInstant()) > 30) {
+                if (ChronoUnit.DAYS.between(LocalDate.now(), existingInsurance.getEndDate().toLocalDate()) > 30) {
                     throw new IllegalArgumentException("Car already has an active insurance that is valid for more than 30 days");
                 }
 
-                if (ChronoUnit.DAYS.between(request.startDate().toInstant(), existingInsurance.getEndDate().toInstant()) >= 0) {
+                if (ChronoUnit.DAYS.between(request.startDate().toInstant(), existingInsurance.getEndDate().toLocalDate()) >= 0) {
                     throw new IllegalArgumentException("Car already has an active insurance that overlaps with the new insurance period");
                 }
 
             }
         }
+
+        
 
         Client client = clientService.getClientByUcnInternal(request.ucn());
 
