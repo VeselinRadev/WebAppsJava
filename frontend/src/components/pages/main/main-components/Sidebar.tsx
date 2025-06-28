@@ -17,7 +17,7 @@ const Sidebar: React.FC = () => {
   return (
       <aside className="sidebar">
         <div className="sidebar-content">
-          <h2 className="logo">Застраховки</h2>
+          <h2 className="logo">Insurance</h2>
           <nav className="nav-buttons">
             <button
                 className={isActive("/dashboard") ? "active" : ""}
@@ -36,12 +36,6 @@ const Sidebar: React.FC = () => {
                 onClick={() => navigate("/client")}
             >
               Client
-            </button>
-            <button
-                className={isActive("/payment") ? "active" : ""}
-                onClick={() => navigate("/payment")}
-            >
-              Payment
             </button>
           </nav>
           <button className="logout-btn" onClick={handleLogout}>

@@ -64,10 +64,8 @@ export default function ClientDashboard() {
         try {
             if (editingClient) {
                 await updateClient(editingClient.ucn, payload);
-                message.success("Client updated");
             } else {
                 await createClient(payload);
-                message.success("Client created");
             }
             setIsModalVisible(false);
             form.resetFields();
@@ -80,7 +78,6 @@ export default function ClientDashboard() {
     const handleDelete = async (ucn: string) => {
         try {
             await deleteClient(ucn);
-            message.success("Client deleted");
             fetchClients();
         } catch (err) {
             console.error("Delete failed:", err);

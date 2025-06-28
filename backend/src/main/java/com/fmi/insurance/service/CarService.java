@@ -31,7 +31,7 @@ public class CarService {
         if (carRepository.existsByPlate(request.plate())) {
             throw new IllegalArgumentException("Car with this plate already exists");
         }
-        Client client = clientRepository.findById(request.clientId())
+        Client client = clientRepository.findByUcn(request.clientUcn())
                 .orElseThrow(() -> new IllegalArgumentException("Client with this ID does not exist"));
 
 

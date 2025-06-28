@@ -108,7 +108,6 @@ export default function InsuranceDetailsPage() {
         };
         try {
             await createPayment(payload);
-            message.success("Payment added");
             setIsModalVisible(false);
             form.resetFields();
             fetchPayments();
@@ -125,7 +124,6 @@ export default function InsuranceDetailsPage() {
         };
         try {
             await updateInsurance(id, payload);
-            message.success("Insurance updated");
             setIsEditVisible(false);
             fetchInsurance();
         } catch (err) {
@@ -252,7 +250,6 @@ export default function InsuranceDetailsPage() {
                                     paid: true,
                                     paymentMethod: values.method,
                                 });
-                                message.success("Marked as paid.");
                                 setIsPayModalVisible(false);
                                 setSelectedPaymentId(null);
                                 payForm.resetFields();

@@ -23,12 +23,6 @@ interface HttpRequestsContextType {
     updatePayment: (id: number, data: any) => Promise<void>;
     deletePayment: (id: number) => Promise<void>;
 
-    getDependencies: () => Promise<{
-        clients: any[];
-        cars: any[];
-        insurers: any[];
-
-    } | undefined>;
     getPaymentsByInsuranceId: (insuranceId: number) => Promise<any[]>;
     getClientByInsuranceId: (insuranceId: number) => Promise<any>;
     getCarByInsuranceId: (insuranceId: number) => Promise<any>;
@@ -184,7 +178,6 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const updatePayment = async (id: number, data: { paid: boolean, paymentMethod: string }) => {
         try {
             await axiosInstance.patch(`/payments/${id}`, data);
-            message.success("Payment updated.");
         } catch (err: any) {
             const msg = err?.response?.data?.message || err?.message || "Failed to update payment.";
             message.error(msg);
@@ -196,27 +189,6 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             await axiosInstance.delete(`/payments/${id}`);
         } catch {
             message.error("Failed to delete payment");
-        }
-    };
-
-    const getDependencies = async () => {
-        try {
-            const [clients, cars, insurers] = await Promise.all([
-                axiosInstance.get("/clients"),
-                axiosInstance.get("/cars"),
-                axiosInstance.get("/insurers"),
-            ]);
-            return {
-                clients: Array.isArray(clients.data) ? clients.data : [],
-                cars: Array.isArray(cars.data) ? cars.data : [],
-                insurers: Array.isArray(insurers.data) ? insurers.data : [],
-            };
-        } catch (err: any) {
-            const res =
-                err?.response?.data?.message ||
-                err?.message ||
-                "Something went wrong. Please try again.";
-            message.error(res);
         }
     };
 
@@ -268,7 +240,6 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             await axiosInstance.patch(`/insurances/${id}`, {
                 status: "ANNULLED",
             });
-            message.success("Insurance annulated.");
         } catch (err: any) {
             const msg =
                 err?.response?.data?.message || err?.message || "Failed to annulate insurance.";
@@ -294,7 +265,6 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 createPayment,
                 updatePayment,
                 deletePayment,
-                getDependencies,
                 getPaymentsByInsuranceId,
                 getClientByInsuranceId,
                 getCarByInsuranceId,

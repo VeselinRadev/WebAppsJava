@@ -26,7 +26,7 @@ public record InsuranceRequestDto(
     String details,
 
     @NotBlank(message = "Plate is required")
-    @Size(min = 8, max = 8)
+    @Size(min = 7, max = 8)
     String plate,
 
     @NotBlank(message = "UCN is required")

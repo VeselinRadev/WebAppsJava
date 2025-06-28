@@ -25,14 +25,13 @@ interface Car {
     seats: number;
     registrationYear: number;
     fuelType: string;
-    client: { id: number; name: string };
+    clientUcn: string;
 }
 
 export default function CarDashboard() {
     const { getCars, createCar, updateCar, deleteCar, getClients  } = useInsurance();
 
     const [cars, setCars] = useState<Car[]>([]);
-    const [clients, setClients] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editingCar, setEditingCar] = useState<Car | null>(null);
@@ -51,34 +50,21 @@ export default function CarDashboard() {
         }
     };
 
-    const fetchClients = async () => {
-        try {
-            const clientList = await getClients();
-            setClients(clientList || []);
-        } catch (err) {
-            console.error("Failed to fetch clients", err);
-        }
-    };
-
     useEffect(() => {
         fetchCars();
-        fetchClients();
     }, []);
 
     const handleSave = async (values: any) => {
         const payload = {
             ...values,
-            clientId: values.clientId,
+            clientUcn: values.clientUcn,
         };
-        //delete payload.clientId;
 
         try {
             if (editingCar) {
                 await updateCar(editingCar.plate, payload);
-                message.success("Car updated");
             } else {
                 await createCar(payload);
-                message.success("Car created");
             }
             setIsModalVisible(false);
             form.resetFields();
@@ -91,7 +77,6 @@ export default function CarDashboard() {
     const handleDelete = async (plate: string) => {
         try {
             await deleteCar(plate);
-            message.success("Car deleted");
             fetchCars();
         } catch (err) {
             console.error("Delete failed:", err);
@@ -107,11 +92,9 @@ export default function CarDashboard() {
         { title: "Fuel", dataIndex: "fuelType", key: "fuelType" },
         {
             title: "Client",
-            key: "client",
-            render: (_: any, record: Car) => {
-                const client = clients.find(c => c.id === record.client?.id);
-                return client ? client.name : "-";
-            },
+            dataIndex: "clientUcn",
+            key: "clientUcn",
+            render: (ucn: string) => ucn ?? "-"
         },
         {
             title: "Actions",
@@ -124,7 +107,7 @@ export default function CarDashboard() {
                             setEditingCar(record);
                             form.setFieldsValue({
                                 ...record,
-                                clientId: record.client?.id ?? null,
+                                clientUcn: record.clientUcn ?? null,
                             });
                             setIsModalVisible(true);
                         }}
@@ -219,7 +202,7 @@ export default function CarDashboard() {
                                      <Select.Option value="LPG">LGP</Select.Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item name="clientId" label="Client" rules={[{ required: true }]}>
+                            <Form.Item name="clientUcn" label="Client" rules={[{ required: true }]}>
                                 <Input/>
                             </Form.Item>
                             <Form.Item>

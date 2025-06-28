@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record CarRequestDto(
     @NotBlank(message = "Plate is required")
-    @Size(min = 8, max = 8, message = "Plate must be exactly 8 characters")
+    @Size(min = 7, max = 8, message = "Plate must be between 7 or 8 characters")
     String plate,
 
     @NotBlank(message = "VIN is required")
@@ -46,6 +46,6 @@ public record CarRequestDto(
     @NotBlank(message = "Fuel type is required")
     String fuelType,
 
-    @NotNull(message = "Client id is required")
-    Long clientId
+    @NotNull(message = "Client UCN is required")
+    String clientUcn
 ){}
