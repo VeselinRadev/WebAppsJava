@@ -2,6 +2,7 @@ package com.fmi.insurance.controller;
 
 import java.util.List;
 
+import com.fmi.insurance.dto.ClientResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +42,12 @@ public class CarController {
     @GetMapping("/{id}")
     public ResponseEntity<CarResponseDto> getCarById(@PathVariable Long id) {
         CarResponseDto car = carService.getCarById(id);
+        return ResponseEntity.ok(car);
+    }
+
+    @GetMapping("/insurance/{insuranceId}")
+    public ResponseEntity<CarResponseDto> getClientByInsuranceId(@PathVariable Long insuranceId) {
+        CarResponseDto car = carService.getCarByInsuranceId(insuranceId);
         return ResponseEntity.ok(car);
     }
 

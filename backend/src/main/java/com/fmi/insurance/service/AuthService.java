@@ -74,8 +74,8 @@ public class AuthService {
         }
 
         String newAccessToken = jwtService.generateToken(token.getInsurer());
+        refreshTokenRepository.deleteByToken(refreshToken);
         String newRefreshToken = createRefreshToken(token.getInsurer());
-        refreshTokenRepository.delete(token);
 
         return new AuthResponseDto(newAccessToken, newRefreshToken);
     }

@@ -42,7 +42,6 @@ export default function CarDashboard() {
         setLoading(true);
         try {
             const data = await getCars();
-            console.log("🚗 Fetched cars:", data);
             setCars(data || []);
         } catch (err) {
             console.error("Error fetching cars:", err);

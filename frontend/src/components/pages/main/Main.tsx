@@ -12,7 +12,7 @@ function Main() {
           <Route path="/car" element={<CarDashboard />} />
           <Route path="/client" element={<ClientDashboard />} />
           <Route path="/payment" element={<PaymentDashboard />} />
-          <Route path="/insurances/:policyNumber" element={<InsuranceDetailsPage />} />
+          <Route path="/insurances/:insuranceId" element={<InsuranceDetailsPage />} />
       </Routes>
   );
 }

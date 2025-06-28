@@ -20,7 +20,7 @@ public record PaymentResponseDto (
             payment.getDueDate(),
             payment.getAmount(),
             payment.getPaymentMethod(),
-            payment.isPaid()
+            payment.getIsPaid()
         );
     }
 }

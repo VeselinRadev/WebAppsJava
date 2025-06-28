@@ -40,7 +40,7 @@ public class CarService {
                 .seats(request.seats())
                 .fuelType(request.fuelType() != null ? FuelType.valueOf(request.fuelType()) : null)
                 .build();
-
+        //link client
         carRepository.save(car);
         return CarResponseDto.fromEntity(car);
     }
@@ -55,6 +55,12 @@ public class CarService {
 
     public CarResponseDto getCarById(Long id) {
         Car car = carRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Car with this ID does not exist"));
+        return CarResponseDto.fromEntity(car);
+    }
+
+    public CarResponseDto getCarByInsuranceId(Long id) {
+        Car car = carRepository.findByInsurances_Id(id)
                 .orElseThrow(() -> new IllegalArgumentException("Car with this ID does not exist"));
         return CarResponseDto.fromEntity(car);
     }

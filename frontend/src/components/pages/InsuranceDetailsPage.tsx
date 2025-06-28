@@ -1,4 +1,3 @@
-// InsuranceDetailsPage.tsx
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -23,16 +22,22 @@ import Sidebar from "./main/main-components/Sidebar";
 import { useInsurance } from "../../contexts/HttpRequestsContext";
 
 export default function InsuranceDetailsPage() {
-    const { policyNumber } = useParams<{ policyNumber: string }>();
+    const { insuranceId } = useParams<{ insuranceId: string }>();
+    const id = parseInt(insuranceId || "", 10);
+
     const {
         getInsurances,
-        getPayments,
+        getPaymentsByInsuranceId,
         createPayment,
         updateInsurance,
+        getClientByInsuranceId,
+        getCarByInsuranceId,
     } = useInsurance();
 
     const [insurance, setInsurance] = useState<any>(null);
+    const [client, setClient] = useState<any>(null);
     const [payments, setPayments] = useState<any[]>([]);
+    const [car, setCar] = useState<any>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isEditVisible, setIsEditVisible] = useState(false);
     const [form] = Form.useForm();
@@ -40,7 +45,7 @@ export default function InsuranceDetailsPage() {
 
     const fetchInsurance = async () => {
         const all = await getInsurances();
-        const match = all.find((i: any) => i.policyNumber === policyNumber);
+        const match = all.find((i: any) => i.id === id);
         setInsurance(match || null);
         if (match) {
             editForm.setFieldsValue({
@@ -52,15 +57,40 @@ export default function InsuranceDetailsPage() {
     };
 
     const fetchPayments = async () => {
-        const all = await getPayments();
-        const relevant = all.filter((p) => p.insurance.policyNumber === policyNumber);
-        setPayments(relevant);
+        try {
+            const payments = await getPaymentsByInsuranceId(id);
+            setPayments(payments);
+        } catch (err) {
+            console.error("Error fetching payments:", err);
+        }
+    };
+
+    const fetchClient = async () => {
+        try {
+            const data = await getClientByInsuranceId(id);
+            setClient(data);
+        } catch (err) {
+            console.error("Error fetching client:", err);
+        }
+    };
+
+    const fetchCar = async () => {
+        try {
+            const result = await getCarByInsuranceId(id);
+            setCar(result);
+        } catch (err) {
+            console.error("Error fetching car:", err);
+        }
     };
 
     useEffect(() => {
-        fetchInsurance();
-        fetchPayments();
-    }, [policyNumber]);
+        if (insuranceId) {
+            fetchInsurance();
+            fetchPayments();
+            fetchClient();
+            fetchCar();
+        }
+    }, [insuranceId]);
 
     const handleSavePayment = async (values: any) => {
         const payload = {
@@ -68,7 +98,7 @@ export default function InsuranceDetailsPage() {
             paymentDate: values.paymentDate.format("YYYY-MM-DD"),
             dueDate: values.dueDate.format("YYYY-MM-DD"),
             isPaid: values.isPaid || false,
-            insurance: { policyNumber },
+            insurance: { id },
         };
         try {
             await createPayment(payload);
@@ -88,7 +118,7 @@ export default function InsuranceDetailsPage() {
             endDate: values.endDate.format("YYYY-MM-DD"),
         };
         try {
-            await updateInsurance(policyNumber!, payload);
+            await updateInsurance(id, payload);
             message.success("Insurance updated");
             setIsEditVisible(false);
             fetchInsurance();
@@ -102,7 +132,12 @@ export default function InsuranceDetailsPage() {
         { title: "Due", dataIndex: "dueDate", key: "dueDate" },
         { title: "Amount", dataIndex: "amount", key: "amount" },
         { title: "Method", dataIndex: "paymentMethod", key: "paymentMethod" },
-        { title: "Paid", dataIndex: "isPaid", key: "isPaid", render: (val: boolean) => (val ? "Yes" : "No") },
+        {
+            title: "Paid",
+            dataIndex: "isPaid",
+            key: "isPaid",
+            render: (val: boolean) => (val ? "Yes" : "No"),
+        },
     ];
 
     return (
@@ -110,7 +145,7 @@ export default function InsuranceDetailsPage() {
             <Sidebar />
             <main style={{ flex: 1, padding: 32, overflowY: "auto" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
-                    <h2>Insurance Policy: {policyNumber}</h2>
+                    <h2>Insurance ID: {insuranceId}</h2>
                     <Button onClick={() => setIsEditVisible(true)}>Edit Insurance</Button>
                 </div>
 
@@ -122,38 +157,42 @@ export default function InsuranceDetailsPage() {
                             <Descriptions.Item label="Sticker">{insurance.sticker}</Descriptions.Item>
                             <Descriptions.Item label="Green Card">{insurance.greenCard}</Descriptions.Item>
                             <Descriptions.Item label="Status">{insurance.status}</Descriptions.Item>
-                            <Descriptions.Item label="Client">{insurance.client?.name}</Descriptions.Item>
-                            <Descriptions.Item label="Car">{insurance.car?.registrationNumber}</Descriptions.Item>
-                            <Descriptions.Item label="Insurer">{insurance.insurer?.username}</Descriptions.Item>
                             <Descriptions.Item label="Details" span={2}>{insurance.details}</Descriptions.Item>
                         </Descriptions>
 
                         <Divider orientation="left">Client Full Details</Divider>
                         <Card size="small" style={{ marginBottom: 24, width: "100%" }}>
-                            <Row gutter={16}>
-                                <Col span={12}><p><b>Name:</b> {insurance.client?.name}</p></Col>
-                                <Col span={12}><p><b>Email:</b> {insurance.client?.email || "-"}</p></Col>
-                                <Col span={12}><p><b>Phone:</b> {insurance.client?.phoneNumber}</p></Col>
-                                <Col span={12}><p><b>Experience Years:</b> {insurance.client?.experienceYears}</p></Col>
-                                <Col span={24}><p><b>Address:</b> {insurance.client?.address?.street || "-"}</p></Col>
-                            </Row>
+                            {client ? (
+                                <Row gutter={16}>
+                                    <Col span={12}><p><b>Name:</b> {client.firstName} {client.lastName}</p></Col>
+                                    <Col span={12}><p><b>Email:</b> {client.email || "-"}</p></Col>
+                                    <Col span={12}><p><b>Phone:</b> {client.phoneNumber}</p></Col>
+                                    <Col span={12}><p><b>Experience Years:</b> {client.experienceYears}</p></Col>
+                                    <Col span={24}><p><b>Address:</b> {client.address?.street || "-"}</p></Col>
+                                </Row>
+                            ) : (
+                                <p>Loading client data...</p>
+                            )}
                         </Card>
 
                         <Divider orientation="left">Car Full Details</Divider>
                         <Card size="small" style={{ marginBottom: 32, width: "100%" }}>
                             <Row gutter={16}>
-                                <Col span={12}><p><b>Registration Number:</b> {insurance.car?.registrationNumber}</p></Col>
+                                <Col span={12}><p><b>Plate:</b> {car?.plate}</p></Col>
+                                <Col span={12}><p><b>VIN:</b> {car?.vin}</p></Col>
+                                <Col span={12}><p><b>Make:</b> {car?.make}</p></Col>
+                                <Col span={12}><p><b>Model:</b> {car?.model}</p></Col>
+                                <Col span={12}><p><b>Year:</b> {car?.year}</p></Col>
+                                <Col span={12}><p><b>Volume:</b> {car?.volume}</p></Col>
+                                <Col span={12}><p><b>Power:</b> {car?.power}</p></Col>
+                                <Col span={12}><p><b>Seats:</b> {car?.seats}</p></Col>
+                                <Col span={12}><p><b>Fuel Type:</b> {car?.fuelType}</p></Col>
                             </Row>
                         </Card>
                     </>
                 ) : (
                     <p>Loading insurance details...</p>
                 )}
-
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <h3>Payments</h3>
-                    <Button type="primary" onClick={() => setIsModalVisible(true)}>Add Partial Payment</Button>
-                </div>
 
                 <Table
                     columns={paymentColumns}

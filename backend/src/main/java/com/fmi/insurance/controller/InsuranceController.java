@@ -2,6 +2,7 @@ package com.fmi.insurance.controller;
 
 import java.util.List;
 
+import com.fmi.insurance.dto.InsuranceResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,30 +28,34 @@ public class InsuranceController {
 
     private final InsuranceService insuranceService;
 
-    @GetMapping
-    public ResponseEntity<List<InsuranceRequestDto>> getInsurances(@Valid @ModelAttribute InsuranceSearchParamDto searchParams) {
-        List<InsuranceRequestDto> insurances = insuranceService.getInsurances(searchParams);
+    @GetMapping("/search")
+    public ResponseEntity<List<InsuranceResponseDto>> getInsurances(@Valid @ModelAttribute InsuranceSearchParamDto searchParams) {
+        List<InsuranceResponseDto> insurances = insuranceService.getInsurances(searchParams);
         return ResponseEntity.ok(insurances);
     }
 
+    @GetMapping
+    public ResponseEntity<List<InsuranceResponseDto>> getAllInsurances() {
+        List<InsuranceResponseDto> insurances = insuranceService.getAllInsurances();
+        return ResponseEntity.ok(insurances);
+    }
 
     @PostMapping
-    public ResponseEntity<InsuranceRequestDto> createInsurance(@Valid @RequestBody InsuranceRequestDto request) {
-        InsuranceRequestDto createdInsurance = insuranceService.createInsurance(request);
+    public ResponseEntity<InsuranceResponseDto> createInsurance(@Valid @RequestBody InsuranceRequestDto request) {
+        InsuranceResponseDto createdInsurance = insuranceService.createInsurance(request);
         return ResponseEntity.ok(createdInsurance);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<InsuranceRequestDto> getInsuranceById(@PathVariable Long id) {
-        InsuranceRequestDto insurance = insuranceService.getInsuranceById(id);
+    public ResponseEntity<InsuranceResponseDto> getInsuranceById(@PathVariable Long id) {
+        InsuranceResponseDto insurance = insuranceService.getInsuranceById(id);
         return ResponseEntity.ok(insurance);
     }
 
-    // for anulirane
     @PatchMapping("{id}")
     public ResponseEntity<InsurancePatchDto> updateInsuranceById(@PathVariable Long id, @Valid @RequestBody InsurancePatchDto request) {
-        // InsuranceDto updatedInsurance = insuranceService.updateInsuranceById(id, request);
-        // return ResponseEntity.ok(updatedInsurance);
+         InsuranceDto updatedInsurance = insuranceService.updateInsuranceById(id, request);
+         return ResponseEntity.ok(updatedInsurance);
         return ResponseEntity.ok(new InsurancePatchDto()); // Placeholder for actual implementation
     }
 }

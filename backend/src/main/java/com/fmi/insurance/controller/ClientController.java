@@ -44,6 +44,12 @@ public class ClientController {
         return ResponseEntity.ok(client);
     }
 
+    @GetMapping("/insurance/{insuranceId}")
+    public ResponseEntity<ClientResponseDto> getClientByInsuranceId(@PathVariable Long insuranceId) {
+        ClientResponseDto client = clientService.getClientByInsuranceId(insuranceId);
+        return ResponseEntity.ok(client);
+    }
+
     @GetMapping("/{ucn}")
     public ResponseEntity<ClientResponseDto> getClientByUcn(@PathVariable String ucn) {
         ClientResponseDto client = clientService.getClientByUcn(ucn);

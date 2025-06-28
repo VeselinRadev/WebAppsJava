@@ -27,12 +27,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class PaymentService {
-
     private final PaymentRepository paymentRepository;
 
     private final CarService carService;
-
-    private final InsuranceService insuranceService;
 
     public List<PaymentResponseDto> getPayments(PaymentSearchParamDto searchParams) {
         return paymentRepository.findPaymentsByCriteria(searchParams).stream()
@@ -55,6 +52,7 @@ public class PaymentService {
             Payment payment = Payment.builder()
                 .insurance(insurance)
                 .dueDate(dueDates.get(i))
+                .isPaid(i == 0)
                 .paymentDate(i == 0 ? Date.valueOf(LocalDate.now()) : null)
                 .amount(carService.getCarPrice(car) / numberOfPayments)
                 .build();
@@ -78,7 +76,7 @@ public class PaymentService {
 
         Set<Payment> payments = insurance.getPayments();
 
-        if (payments.stream().anyMatch(payment1 -> !payment1.isPaid() && payment1.getId() != id && payment1.getDueDate().before(payment.getDueDate()))) {
+        if (payments.stream().anyMatch(payment1 -> !payment1.getIsPaid() && payment1.getId() != id && payment1.getDueDate().before(payment.getDueDate()))) {
             throw new IllegalArgumentException("Cannot mark payment as paid because there are unpaid payments with earlier due dates.");
         }
 
@@ -87,7 +85,7 @@ public class PaymentService {
                 payment.setPaymentDate(Date.valueOf(LocalDate.now()));
             }
         });
-
+        //add optional for payment method
         paymentRepository.save(payment);
         return PaymentResponseDto.fromEntity(payment);
     }
@@ -110,26 +108,5 @@ public class PaymentService {
                 .map(Date::valueOf)
                 .toList();
     }
-
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void checkPayments() {
-        LocalDate today = LocalDate.now().plusDays(15); 
-        PaymentSearchParamDto searchParams = PaymentSearchParamDto.builder()
-                .afterDate(Date.valueOf(today))
-                .build();
-
-        paymentRepository.findPaymentsByCriteria(searchParams).stream()
-                .filter(payment -> !payment.isPaid())
-                .map(Payment::getInsurance)
-                .distinct()
-                .peek(insurance -> {
-                    InsurancePatchDto insurancePatchDto = InsurancePatchDto.builder()
-                            .status(InsuranceStatus.ANNULLED)
-                            .build();
-
-                    insuranceService.updateInsuranceById(insurance.getId(), insurancePatchDto);
-                });
-    }
-
 
 }

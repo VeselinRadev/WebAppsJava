@@ -17,8 +17,8 @@ import java.util.Date;
 public class JwtService {
     private static final int ACCESS_TOKEN_EXPIRY = 15;
 
-    @Value("${jwt.secret}")
-    private static String secretKey;
+//    @Value("${jwt.secret}")
+    private static String secretKey = "V2CklYoKsyXt8qFUwKfnQ0lPIu4abN+CPw8tdLJH6I0=";
 
     public String generateToken(UserDetails userDetails) {
         Instant now = Instant.now();
