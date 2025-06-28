@@ -1,5 +1,6 @@
 package com.fmi.insurance.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -168,7 +169,7 @@ public class CarService {
 
     Double getCarPrice(Car car) {
 
-        return 300 * getAgeMultiplier(car.getRegistrationYear())
+        return 300 * getAgeMultiplier(LocalDate.now().getYear() - car.getRegistrationYear())
                 * getVolumeMultiplier(car.getVolume())
                 * getPowerMultiplier(car.getPower())
                 * getSeatsMultiplier(car.getSeats())

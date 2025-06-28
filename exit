@@ -1,0 +1,20 @@
+[1mdiff --git a/backend/src/main/java/com/fmi/insurance/service/CarService.java b/backend/src/main/java/com/fmi/insurance/service/CarService.java[m
+[1mindex 3f44063..fc4594b 100644[m
+[1m--- a/backend/src/main/java/com/fmi/insurance/service/CarService.java[m
+[1m+++ b/backend/src/main/java/com/fmi/insurance/service/CarService.java[m
+[36m@@ -1,5 +1,6 @@[m
+ package com.fmi.insurance.service;[m
+ [m
+[32m+[m[32mimport java.time.LocalDate;[m
+ import java.util.List;[m
+ import java.util.Optional;[m
+ import java.util.function.Function;[m
+[36m@@ -168,7 +169,7 @@[m [mpublic class CarService {[m
+ [m
+     Double getCarPrice(Car car) {[m
+ [m
+[31m-        return 300 * getAgeMultiplier(car.getRegistrationYear())[m
+[32m+[m[32m        return 300 * getAgeMultiplier(LocalDate.now().getYear() - car.getRegistrationYear())[m
+                 * getVolumeMultiplier(car.getVolume())[m
+                 * getPowerMultiplier(car.getPower())[m
+                 * getSeatsMultiplier(car.getSeats())[m
