@@ -56,11 +56,11 @@ public class ClientController {
         return ResponseEntity.ok(client);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClientById(@PathVariable Long id) {
-        clientService.deleteClientById(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteClientById(@PathVariable Long id) {
+//        clientService.deleteClientById(id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @DeleteMapping("/{ucn}")
     public ResponseEntity<Void> deleteClientByUcn(@PathVariable String ucn) {
@@ -68,11 +68,11 @@ public class ClientController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<ClientResponseDto> updateClientById(@PathVariable Long id, @Valid @RequestBody ClientPatchDto request) {
-        ClientResponseDto updatedClient = clientService.updateClientById(id, request);
-        return ResponseEntity.ok(updatedClient);
-    }
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<ClientResponseDto> updateClientById(@PathVariable Long id, @Valid @RequestBody ClientPatchDto request) {
+//        ClientResponseDto updatedClient = clientService.updateClientById(id, request);
+//        return ResponseEntity.ok(updatedClient);
+//    }
 
     @PatchMapping("/{ucn}")
     public ResponseEntity<ClientResponseDto> updateClientByUcn(@PathVariable String ucn, @Valid @RequestBody ClientPatchDto request) {

@@ -63,11 +63,11 @@ public class CarController {
         return ResponseEntity.ok(car);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCarById(@PathVariable Long id) {
-        carService.deleteCarById(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteCarById(@PathVariable Long id) {
+//        carService.deleteCarById(id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @DeleteMapping("/{plate}")
     public ResponseEntity<Void> deleteCarByPlate(@PathVariable String plate) {
@@ -75,17 +75,17 @@ public class CarController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{vin}")
-    public ResponseEntity<Void> deleteCarByVin(@PathVariable String vin) {
-        carService.deleteCarByVin(vin);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{vin}")
+//    public ResponseEntity<Void> deleteCarByVin(@PathVariable String vin) {
+//        carService.deleteCarByVin(vin);
+//        return ResponseEntity.noContent().build();
+//    }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<CarResponseDto> updateCarById(@PathVariable Long id, @Valid @RequestBody CarPatchDto request) {
-        CarResponseDto updatedCar = carService.updateCarById(id, request);
-        return ResponseEntity.ok(updatedCar);
-    }
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<CarResponseDto> updateCarById(@PathVariable Long id, @Valid @RequestBody CarPatchDto request) {
+//        CarResponseDto updatedCar = carService.updateCarById(id, request);
+//        return ResponseEntity.ok(updatedCar);
+//    }
 
     @PatchMapping("/{plate}")
     public ResponseEntity<CarResponseDto> updateCarByPlate(@PathVariable String plate, @Valid @RequestBody CarPatchDto request) {
@@ -93,9 +93,9 @@ public class CarController {
         return ResponseEntity.ok(updatedCar);
     }
 
-    @PatchMapping("/{vin}")
-    public ResponseEntity<CarResponseDto> updateCarByVin(@PathVariable String vin, @Valid @RequestBody CarPatchDto request) {
-        CarResponseDto updatedCar = carService.updateCarByVin(vin, request);
-        return ResponseEntity.ok(updatedCar);
-    }
+//    @PatchMapping("/{vin}")
+//    public ResponseEntity<CarResponseDto> updateCarByVin(@PathVariable String vin, @Valid @RequestBody CarPatchDto request) {
+//        CarResponseDto updatedCar = carService.updateCarByVin(vin, request);
+//        return ResponseEntity.ok(updatedCar);
+//    }
 }

@@ -1,4 +1,3 @@
-// ClientDashboard.tsx
 import { useEffect, useState } from "react";
 import {
     Table,
@@ -9,7 +8,8 @@ import {
     Space,
     Popconfirm,
     message,
-} from "antd";import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+} from "antd";
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import Sidebar from "./main-components/Sidebar";
 import { useInsurance } from "../../../contexts/HttpRequestsContext";
 
@@ -41,7 +41,7 @@ export default function ClientDashboard() {
     const fetchClients = async () => {
         setLoading(true);
         const data = await getClients();
-        setClients(data);
+        setClients(data || []);
         setLoading(false);
     };
 
@@ -50,12 +50,23 @@ export default function ClientDashboard() {
     }, []);
 
     const handleSave = async (values: any) => {
+        const { street, city, zipCode, country, ...rest } = values;
+        const payload = {
+            ...rest,
+            address: {
+                street,
+                city,
+                zipCode,
+                country,
+            },
+        };
+
         try {
             if (editingClient) {
-                await updateClient(editingClient.ucn, values);
+                await updateClient(editingClient.ucn, payload);
                 message.success("Client updated");
             } else {
-                await createClient(values);
+                await createClient(payload);
                 message.success("Client created");
             }
             setIsModalVisible(false);
@@ -100,7 +111,10 @@ export default function ClientDashboard() {
                         icon={<EditOutlined />}
                         onClick={() => {
                             setEditingClient(record);
-                            form.setFieldsValue({ ...record, ...record.address });
+                            form.setFieldsValue({
+                                ...record,
+                                ...record.address,
+                            });
                             setIsModalVisible(true);
                         }}
                     />
@@ -153,26 +167,50 @@ export default function ClientDashboard() {
                     >
                         <Form layout="vertical" form={form} onFinish={handleSave}>
                             {!editingClient && (
-                                <Form.Item name="ucn" label="UCN" rules={[{ required: true }]}> <Input /> </Form.Item>
+                                <Form.Item name="ucn" label="UCN" rules={[{ required: true }]}>
+                                    <Input />
+                                </Form.Item>
                             )}
-                            <Form.Item name="firstName" label="First Name" rules={[{ required: true }]}> <Input /> </Form.Item>
-                            <Form.Item name="lastName" label="Last Name" rules={[{ required: true }]}> <Input /> </Form.Item>
-                            <Form.Item name="email" label="Email"> <Input type="email" /> </Form.Item>
-                            <Form.Item name="phoneNumber" label="Phone Number" rules={[{ required: true }]}> <Input /> </Form.Item>
-                            <Form.Item name="experienceYears" label="Experience Years" rules={[{ required: true }]}> <Input type="number" /> </Form.Item>
-                            <Form.Item name="street" label="Street"> <Input /> </Form.Item>
-                            <Form.Item name="city" label="City"> <Input /> </Form.Item>
-                            <Form.Item name="zipCode" label="Zip Code"> <Input /> </Form.Item>
-                            <Form.Item name="country" label="Country"> <Input /> </Form.Item>
+                            <Form.Item name="firstName" label="First Name" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="lastName" label="Last Name" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="email" label="Email">
+                                <Input type="email" />
+                            </Form.Item>
+                            <Form.Item name="phoneNumber" label="Phone Number" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="experienceYears" label="Experience Years" rules={[{ required: true }]}>
+                                <Input type="number" />
+                            </Form.Item>
+                            <Form.Item name="street" label="Street">
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="city" label="City">
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="zipCode" label="Zip Code">
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="country" label="Country">
+                                <Input />
+                            </Form.Item>
                             <Form.Item>
                                 <Space>
                                     <Button type="primary" htmlType="submit">
                                         {editingClient ? "Update" : "Create"}
                                     </Button>
-                                    <Button onClick={() => {
-                                        setIsModalVisible(false);
-                                        form.resetFields();
-                                    }}>Cancel</Button>
+                                    <Button
+                                        onClick={() => {
+                                            setIsModalVisible(false);
+                                            form.resetFields();
+                                        }}
+                                    >
+                                        Cancel
+                                    </Button>
                                 </Space>
                             </Form.Item>
                         </Form>

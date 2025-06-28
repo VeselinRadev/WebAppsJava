@@ -104,7 +104,7 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const updateCar = async (plate: string, data: any) => {
         try {
-            await axiosInstance.put(`/cars/${plate}`, data);
+            await axiosInstance.patch(`/cars/${plate}`, data);
         } catch {
             message.error("Failed to update car");
         }
@@ -137,17 +137,25 @@ export const InsuranceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const updateClient = async (ucn: string, data: any) => {
         try {
-            await axiosInstance.put(`/clients/${ucn}`, data);
-        } catch {
-            message.error("Failed to update client");
+            await axiosInstance.patch(`/clients/${ucn}`, data);
+        } catch(err: any) {
+            const res =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Something went wrong. Please try again.";
+            message.error(res);
         }
     };
 
     const deleteClient = async (ucn: string) => {
         try {
             await axiosInstance.delete(`/clients/${ucn}`);
-        } catch {
-            message.error("Failed to delete client");
+        } catch(err: any) {
+            const res =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Something went wrong. Please try again.";
+            message.error(res);
         }
     };
 

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.fmi.insurance.model.Client;
+import com.fmi.insurance.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 
 import com.fmi.insurance.dto.CarRequestDto;
@@ -23,11 +25,15 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class CarService {
     private final CarRepository carRepository;
+    private final ClientRepository clientRepository;
 
     public CarResponseDto createCar(CarRequestDto request) {
         if (carRepository.existsByPlate(request.plate())) {
             throw new IllegalArgumentException("Car with this plate already exists");
         }
+        Client client = clientRepository.findById(request.clientId())
+                .orElseThrow(() -> new IllegalArgumentException("Client with this ID does not exist"));
+
 
         Car car = Car.builder()
                 .plate(request.plate())
@@ -38,9 +44,11 @@ public class CarService {
                 .volume(request.volume())
                 .power(request.power())
                 .seats(request.seats())
+                .registrationYear(request.registrationYear())
                 .fuelType(request.fuelType() != null ? FuelType.valueOf(request.fuelType()) : null)
+                .client(client)
                 .build();
-        //link client
+
         carRepository.save(car);
         return CarResponseDto.fromEntity(car);
     }

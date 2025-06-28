@@ -29,7 +29,7 @@ interface Car {
 }
 
 export default function CarDashboard() {
-    const { getCars, createCar, updateCar, deleteCar, getDependencies } = useInsurance();
+    const { getCars, createCar, updateCar, deleteCar, getClients  } = useInsurance();
 
     const [cars, setCars] = useState<Car[]>([]);
     const [clients, setClients] = useState<any[]>([]);
@@ -53,8 +53,8 @@ export default function CarDashboard() {
 
     const fetchClients = async () => {
         try {
-            //const { clients } = await getDependencies();
-            setClients(clients);
+            const clientList = await getClients();
+            setClients(clientList || []);
         } catch (err) {
             console.error("Failed to fetch clients", err);
         }
@@ -66,12 +66,18 @@ export default function CarDashboard() {
     }, []);
 
     const handleSave = async (values: any) => {
+        const payload = {
+            ...values,
+            clientId: values.clientId,
+        };
+        //delete payload.clientId;
+
         try {
             if (editingCar) {
-                await updateCar(editingCar.plate, values);
+                await updateCar(editingCar.plate, payload);
                 message.success("Car updated");
             } else {
-                await createCar(values);
+                await createCar(payload);
                 message.success("Car created");
             }
             setIsModalVisible(false);
@@ -101,8 +107,11 @@ export default function CarDashboard() {
         { title: "Fuel", dataIndex: "fuelType", key: "fuelType" },
         {
             title: "Client",
-            dataIndex: ["client", "name"],
             key: "client",
+            render: (_: any, record: Car) => {
+                const client = clients.find(c => c.id === record.client?.id);
+                return client ? client.name : "-";
+            },
         },
         {
             title: "Actions",
@@ -115,7 +124,7 @@ export default function CarDashboard() {
                             setEditingCar(record);
                             form.setFieldsValue({
                                 ...record,
-                                clientId: record.client.id,
+                                clientId: record.client?.id ?? null,
                             });
                             setIsModalVisible(true);
                         }}
@@ -203,19 +212,15 @@ export default function CarDashboard() {
                             </Form.Item>
                             <Form.Item name="fuelType" label="Fuel Type" rules={[{ required: true }]}>
                                 <Select>
-                                    <Select.Option value="PETROL">Petrol</Select.Option>
                                     <Select.Option value="DIESEL">Diesel</Select.Option>
                                     <Select.Option value="ELECTRIC">Electric</Select.Option>
+                                     <Select.Option value="GASOLINE">Gasoline</Select.Option>
+                                     <Select.Option value="HYBRID">Hybring</Select.Option>
+                                     <Select.Option value="LPG">LGP</Select.Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item name="clientId" label="Client" rules={[{ required: true }]}>
-                                <Select>
-                                    {clients.map((client) => (
-                                        <Select.Option key={client.id} value={client.id}>
-                                            {client.name}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
+                                <Input/>
                             </Form.Item>
                             <Form.Item>
                                 <Space>
