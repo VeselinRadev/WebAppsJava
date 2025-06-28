@@ -3,19 +3,18 @@ package com.fmi.insurance.service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
 
-import org.springframework.scheduling.annotation.Scheduled;
+import com.fmi.insurance.model.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fmi.insurance.dto.InsuranceRequestDto;
 import com.fmi.insurance.dto.InsuranceResponseDto;
 import com.fmi.insurance.dto.InsurancePatchDto;
 import com.fmi.insurance.dto.InsuranceSearchParamDto;
-import com.fmi.insurance.model.Car;
-import com.fmi.insurance.model.Client;
-import com.fmi.insurance.model.Insurance;
-import com.fmi.insurance.model.Payment;
 import com.fmi.insurance.repository.InsuranceRepository;
 import com.fmi.insurance.vo.InsuranceStatus;
 
@@ -41,6 +40,12 @@ public class InsuranceService {
             .toList();
     }
 
+    public List<InsuranceResponseDto> getAllInsurances() {
+        return insuranceRepository.findAll().stream()
+                .map(InsuranceResponseDto::fromEntity)
+                .toList();
+    }
+
     public InsuranceResponseDto getInsuranceById(Long id) {
         return insuranceRepository.findById(id)
             .map(InsuranceResponseDto::fromEntity)
@@ -48,7 +53,8 @@ public class InsuranceService {
     }
 
     public InsuranceResponseDto createInsurance(InsuranceRequestDto request) {
-        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Insurer insurer = (Insurer) auth.getPrincipal();
         Car car = carService.getCarByPlateInternal(request.plate());
 
         List<Insurance> activeInsurances = insuranceRepository.findByCar_Plate(car.getPlate()).stream()
@@ -85,19 +91,21 @@ public class InsuranceService {
             .details(request.details())
             .car(car)
             .client(client)
+            .insurer(insurer)
+            .payments(new HashSet<>())
             .status(LocalDate.now().isBefore(request.startDate().toLocalDate()) ? InsuranceStatus.INCOMING : InsuranceStatus.ACTIVE)
             .build();
 
 
+        insuranceRepository.save(insurance);
+
         List<Payment> payments = paymentService.createPayments(insurance, car, request.numberOfPayments());
 
-        payments.forEach(payment -> {
-            insurance.addPayment(payment);
-        });
+        payments.forEach(insurance::addPayment);
         car.addInsurance(insurance);
         client.addInsurance(insurance);
 
-        insuranceRepository.save(insurance);
+
 
         String policyNumber = "GO-" + String.format("%d%06d",LocalDate.now().getYear() % 100, insurance.getId());
         insurance.setPolicyNumber(policyNumber);
@@ -117,19 +125,5 @@ public class InsuranceService {
         insurance.setStatus(request.status());
 
         return InsuranceResponseDto.fromEntity(insuranceRepository.save(insurance));
-    }
-
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void checkInsurances() {
-        LocalDate today = LocalDate.now();
-        List<Insurance> insurances = insuranceRepository.findByStatus(InsuranceStatus.ACTIVE).stream()
-            .filter(insurance -> insurance.getEndDate().toLocalDate().isBefore(today))
-            .map(insurance -> {
-                insurance.setStatus(InsuranceStatus.EXPIRED);
-                return insurance;
-            })
-            .toList();
-        
-        insuranceRepository.saveAll(insurances);
     }
 }

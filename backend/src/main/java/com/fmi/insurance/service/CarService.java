@@ -1,9 +1,12 @@
 package com.fmi.insurance.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.fmi.insurance.model.Client;
+import com.fmi.insurance.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 
 import com.fmi.insurance.dto.CarRequestDto;
@@ -23,11 +26,15 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class CarService {
     private final CarRepository carRepository;
+    private final ClientRepository clientRepository;
 
     public CarResponseDto createCar(CarRequestDto request) {
         if (carRepository.existsByPlate(request.plate())) {
             throw new IllegalArgumentException("Car with this plate already exists");
         }
+        Client client = clientRepository.findByUcn(request.clientUcn())
+                .orElseThrow(() -> new IllegalArgumentException("Client with this ID does not exist"));
+
 
         Car car = Car.builder()
                 .plate(request.plate())
@@ -38,7 +45,9 @@ public class CarService {
                 .volume(request.volume())
                 .power(request.power())
                 .seats(request.seats())
+                .registrationYear(request.registrationYear())
                 .fuelType(request.fuelType() != null ? FuelType.valueOf(request.fuelType()) : null)
+                .client(client)
                 .build();
 
         carRepository.save(car);
@@ -55,6 +64,12 @@ public class CarService {
 
     public CarResponseDto getCarById(Long id) {
         Car car = carRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Car with this ID does not exist"));
+        return CarResponseDto.fromEntity(car);
+    }
+
+    public CarResponseDto getCarByInsuranceId(Long id) {
+        Car car = carRepository.findByInsurances_Id(id)
                 .orElseThrow(() -> new IllegalArgumentException("Car with this ID does not exist"));
         return CarResponseDto.fromEntity(car);
     }
@@ -154,7 +169,7 @@ public class CarService {
 
     Double getCarPrice(Car car) {
 
-        return 300 * getAgeMultiplier(car.getRegistrationYear())
+        return 300 * getAgeMultiplier(LocalDate.now().getYear() - car.getRegistrationYear())
                 * getVolumeMultiplier(car.getVolume())
                 * getPowerMultiplier(car.getPower())
                 * getSeatsMultiplier(car.getSeats())

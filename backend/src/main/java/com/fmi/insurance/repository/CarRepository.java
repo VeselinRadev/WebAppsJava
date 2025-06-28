@@ -27,4 +27,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @Query("SELECT c FROM Car c JOIN c.insurances i WHERE i.policyNumber = :policyNumber")
     Optional<Car> findByInsurances_PolicyNumber(@Param("policyNumber")String policyNumber);
 
+    @Query("SELECT c FROM Car c JOIN c.insurances i WHERE i.id = :id")
+    Optional<Car> findByInsurances_Id(Long id);
 }

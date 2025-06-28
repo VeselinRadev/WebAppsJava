@@ -48,18 +48,20 @@ public class Payment {
     @NotNull
     private Double amount;
 
-    @Column(nullable = false)
-    @NotNull
+    @Column
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    public Boolean isPaid() {
-        return this.paymentDate != null;
-    }
+    @Column(nullable = false)
+    private Boolean isPaid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_id", nullable = false)
     private Insurance insurance;
 
+    public void setPaymentDate(Date paymentDate) {
+        this.paymentDate = paymentDate;
+        this.isPaid = paymentDate != null;
+    }
 }
 

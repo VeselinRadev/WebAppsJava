@@ -1,6 +1,7 @@
 package com.fmi.insurance.model;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fmi.insurance.vo.InsuranceStatus;
@@ -75,7 +76,7 @@ public class Insurance {
     private Insurer insurer;
 
     @OneToMany(orphanRemoval = true, mappedBy = "insurance")
-    private Set<Payment> payments;
+    private Set<Payment> payments = new HashSet<>();
 
     public void addPayment(Payment payment) {
         payments.add(payment);

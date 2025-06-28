@@ -61,6 +61,13 @@ public class ClientService {
         return ClientResponseDto.fromEntity(client);
     }
 
+    public ClientResponseDto getClientByInsuranceId(Long id) {
+        Client client = clientRepository.findClientByInsurances_Id(id)
+                .orElseThrow(() -> new IllegalArgumentException("Client with this ID does not exist"));
+
+        return ClientResponseDto.fromEntity(client);
+    }
+
     public ClientResponseDto getClientByUcn(String ucn) {
         Client client = clientRepository.findByUcn(ucn)
                 .orElseThrow(() -> new IllegalArgumentException("Client with this UCN does not exist"));

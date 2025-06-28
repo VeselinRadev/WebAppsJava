@@ -12,7 +12,10 @@ public record CarResponseDto(
     Integer volume,
     Integer power,
     Integer seats,
-    String fuelType
+    String fuelType,
+    Integer registrationYear,
+    String clientUcn,
+    Long clientId
 ) {
     public static CarResponseDto fromEntity(Car car) {
         return new CarResponseDto(
@@ -25,7 +28,10 @@ public record CarResponseDto(
             car.getVolume(),
             car.getPower(),
             car.getSeats(),
-            car.getFuelType() != null ? car.getFuelType().name() : null
+            car.getFuelType() != null ? car.getFuelType().name() : null,
+            car.getRegistrationYear(),
+            car.getClient().getUcn(),
+            car.getClient().getId()
         );
     }
 }

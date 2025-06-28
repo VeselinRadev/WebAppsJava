@@ -38,9 +38,15 @@ public class ClientController {
         return ResponseEntity.ok(clients);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClientResponseDto> getClientById(@PathVariable Long id) {
-        ClientResponseDto client = clientService.getClientById(id);
+    // @GetMapping("/{id}")
+    // public ResponseEntity<ClientResponseDto> getClientById(@PathVariable Long id) {
+    //     ClientResponseDto client = clientService.getClientById(id);
+    //     return ResponseEntity.ok(client);
+    // }
+
+    @GetMapping("/insurance/{insuranceId}")
+    public ResponseEntity<ClientResponseDto> getClientByInsuranceId(@PathVariable Long insuranceId) {
+        ClientResponseDto client = clientService.getClientByInsuranceId(insuranceId);
         return ResponseEntity.ok(client);
     }
 
@@ -50,11 +56,11 @@ public class ClientController {
         return ResponseEntity.ok(client);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClientById(@PathVariable Long id) {
-        clientService.deleteClientById(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteClientById(@PathVariable Long id) {
+//        clientService.deleteClientById(id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @DeleteMapping("/{ucn}")
     public ResponseEntity<Void> deleteClientByUcn(@PathVariable String ucn) {
@@ -62,11 +68,11 @@ public class ClientController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<ClientResponseDto> updateClientById(@PathVariable Long id, @Valid @RequestBody ClientPatchDto request) {
-        ClientResponseDto updatedClient = clientService.updateClientById(id, request);
-        return ResponseEntity.ok(updatedClient);
-    }
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<ClientResponseDto> updateClientById(@PathVariable Long id, @Valid @RequestBody ClientPatchDto request) {
+//        ClientResponseDto updatedClient = clientService.updateClientById(id, request);
+//        return ResponseEntity.ok(updatedClient);
+//    }
 
     @PatchMapping("/{ucn}")
     public ResponseEntity<ClientResponseDto> updateClientByUcn(@PathVariable String ucn, @Valid @RequestBody ClientPatchDto request) {

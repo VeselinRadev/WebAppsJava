@@ -26,4 +26,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     @Query("SELECT c FROM Client c JOIN c.insurances i WHERE i.policyNumber = :policyNumber")
     Optional<Client> findByInsurances_PolicyNumber(@Param("policyNumber")String policyNumber);
+
+    @Query("SELECT c FROM Client c JOIN c.insurances i WHERE i.id = :id")
+    Optional<Client> findClientByInsurances_Id(@Param("id") Long id);
 }
